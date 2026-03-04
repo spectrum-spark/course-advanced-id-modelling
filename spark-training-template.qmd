@@ -1,0 +1,14 @@
+---
+title: Training Module One
+subtitle: Short training course
+format:
+  training-html: default
+presenter: Prof. Marie Curie
+contributors:
+  - Albert Einstein
+  - Sigmend Freud
+---
+
+## Introduction
+
+Everything else in this document is standard quarto. But notice the Contributors block at the end.

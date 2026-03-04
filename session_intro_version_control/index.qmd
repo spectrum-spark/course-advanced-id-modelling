@@ -1,0 +1,10 @@
+---
+title: SPARKLE Training Course
+subtitle: Introduction to Version Control
+format:
+  training-html: default
+presenter: "Marie Curie"
+contributors: [Albert Einstein, Isaac Newton]
+---
+
+## Welcome
