@@ -30,6 +30,7 @@ website:
       - text: "Sessions"
         menu:
           - text: "Session 1: Introduction to version control"
+          - href: session_spatial_models/session_spatial_models.qmd
     
   page-footer:
     left: |

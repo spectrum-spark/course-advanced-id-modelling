@@ -5,3 +5,13 @@ title: SPARKLE Training Course
 ## Introduction
 
 Testing 1 2 3
+
+
+## Introduction to spatial modelling
+
+We will briefly cover these topics:
+
+1. Spatially explicit models (reaction diffusion)
+2. Metapopulation approaches
+3. Network models
+4. Briefly mention what we haven't covered
