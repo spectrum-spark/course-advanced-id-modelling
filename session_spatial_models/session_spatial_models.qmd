@@ -1478,6 +1478,43 @@ kbl(df, col.names = c("Model type", "Best suited to",
   column_spec(1, bold = TRUE)
 ```
 
+```{r echo=FALSE}
+library(kableExtra)
+df <- data.frame(
+  `Model type` = c("Reaction-diffusion",
+                   "Metapopulation (commuter)",
+                   "Network",
+                   "Agent-based",
+                   "SDM / spatial risk mapping"),
+  `Best suited to` = c(
+    "Animal/plant diseases, vector dispersal, zoonoses with local spread",
+    "Human respiratory or vector-borne disease at regional/national scale; commuting data available",
+    "STIs and diseases where individual contact heterogeneity matters; identifying hubs for intervention",
+    "Diseases where individual behaviour, household structure, or fine-grained heterogeneity is critical",
+    "Identifying where ecological conditions support transmission; climate change impact on disease distribution; surveillance prioritisation"
+  ),
+  `Key advantage` = c(
+    "Analytical results (wavespeed); intuitive",
+    "Maps onto administrative data; tractable for large-scale modelling",
+    "Captures heterogeneous connectivity; identifies high-risk nodes",
+    "Most biologically realistic",
+    "Integrates environmental and ecological data; communicates risk spatially to decision makers; can incorporate climate projections"
+  ),
+  `Key limitation` = c(
+    "Local random movement only; poor for modern human populations",
+    "Parameter explosion with many patches; assumes well-mixed within patch",
+    "Network structure often unknown or time-varying; still requires within-node model",
+    "High data and computational demands; hard to identify mechanisms",
+    "Static snapshot --- does not model transmission dynamics or intervention effects; sensitive to data quality and climate model uncertainty"
+  )
+)
+kbl(df, col.names = c("Model type", "Best suited to",
+                       "Key advantage", "Key limitation")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = TRUE) %>%
+  column_spec(1, bold = TRUE)
+```
+
+
 **3.7 You are asked to model the spread of influenza A across a large region for a coming flu season. Which type of spatial model would you choose, and why? What data would you need to parameterise it?**
 
 
