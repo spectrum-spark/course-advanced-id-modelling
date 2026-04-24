@@ -1452,60 +1452,28 @@ df <- data.frame(
   `Model type` = c("Reaction-diffusion",
                    "Metapopulation (commuter)",
                    "Network",
-                   "Agent-based"),
-  `Best suited to` = c(
-    "Animal/plant diseases, vector dispersal, zoonoses with local spread",
-    "Human respiratory or vector-borne disease at regional/national scale; commuting data available",
-    "STIs and diseases where individual contact heterogeneity matters; identifying hubs for intervention",
-    "Diseases where individual behaviour, household structure, or fine-grained heterogeneity is critical"
-  ),
-  `Key advantage` = c(
-    "Analytical results (wavespeed); intuitive",
-    "Maps onto administrative data; tractable for large-scale modelling",
-    "Captures heterogeneous connectivity; identifies high-risk nodes",
-    "Most biologically realistic"
-  ),
-  `Key limitation` = c(
-    "Local random movement only; poor for modern human populations",
-    "Parameter explosion with many patches; assumes well-mixed within patch",
-    "Network structure often unknown or time-varying; still requires within-node model",
-    "High data and computational demands; hard to identify mechanisms"
-  )
-)
-kbl(df, col.names = c("Model type", "Best suited to",
-                       "Key advantage", "Key limitation")) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = TRUE) %>%
-  column_spec(1, bold = TRUE)
-```
-
-```{r echo=FALSE}
-library(kableExtra)
-df <- data.frame(
-  `Model type` = c("Reaction-diffusion",
-                   "Metapopulation (commuter)",
-                   "Network",
                    "Agent-based",
-                   "SDM / spatial risk mapping"),
+                   "Spatial risk mapping"),
   `Best suited to` = c(
     "Animal/plant diseases, vector dispersal, zoonoses with local spread",
     "Human respiratory or vector-borne disease at regional/national scale; commuting data available",
     "STIs and diseases where individual contact heterogeneity matters; identifying hubs for intervention",
     "Diseases where individual behaviour, household structure, or fine-grained heterogeneity is critical",
-    "Identifying where ecological conditions support transmission; climate change impact on disease distribution; surveillance prioritisation"
+    "Visualising spatial and potentially spatio-temporal patterns"
   ),
   `Key advantage` = c(
     "Analytical results (wavespeed); intuitive",
     "Maps onto administrative data; tractable for large-scale modelling",
     "Captures heterogeneous connectivity; identifies high-risk nodes",
     "Most biologically realistic",
-    "Integrates environmental and ecological data; communicates risk spatially to decision makers; can incorporate climate projections"
+    "Can build on existing spatial layers such as environmental and ecological data; communicates risk spatially to decision makers"
   ),
   `Key limitation` = c(
     "Local random movement only; poor for modern human populations",
     "Parameter explosion with many patches; assumes well-mixed within patch",
     "Network structure often unknown or time-varying; still requires within-node model",
     "High data and computational demands; hard to identify mechanisms",
-    "Static snapshot --- does not model transmission dynamics or intervention effects; sensitive to data quality and climate model uncertainty"
+    "Spatio-temporal can require interactive interface or video to fully convey meaning; data layers can come with different spatiotemporal resolutions etc requiring interpolation; often sensitive to data quality and climate model uncertainty; can require more computational resources"
   )
 )
 kbl(df, col.names = c("Model type", "Best suited to",
@@ -1571,5 +1539,342 @@ The solutions tab contains suggested answers for Part 4. **Only click on it if y
 **4.2** A reaction-diffusion or cellular automata model would be most appropriate here, because the primary driver of spatial spread is local vector movement: a genuinely diffusive process between nearby habitat patches. The relevant spatial scale is the flight range of the mosquito species involved (typically a few kilometres), which is short and local rather than network-structured. A metapopulation with larger patches could also be used if the question is about spread between discrete wetland areas at a regional scale, but the fundamental driver (local insect dispersal) is better captured by a continuous or discretised diffusion model. Environmental covariates such as habitat connectivity, rainfall, and temperature would need to be incorporated to make the model realistic for a specific setting.
 
 <p><br></p>
+
+:::
+
+
+---
+
+# **Bonus:** Spatial risk mapping
+
+::: speaker-note
+This section is genuinely optional and should only be used if time allows or as a take-home reading. It addresses a question that commonly arises at the end of spatial modelling sessions: "but how do we know *where* to apply these models in the first place, and how do we communicate risk spatially?" The three papers here are deliberately chosen to show a progression: dynamic model outputs mapped spatially (Moss et al.), pure ecological risk mapping (Sexton et al.), and a bridge between the two that incorporates vectorial capacity into a spatially explicit framework (Skinner et al.). The interactive map is the centrepiece for in-session use. Question B.1 works well as a brief pair discussion; B.2 is better as a reflective take-home question. If participants ask about the papers, note that Roslyn is a co-author on all three. If participants ask what comes next, it is reasonable to mention that extending the Skinner et al. framework into a full dynamic transmission model is an active area of current research.
+:::
+
+::: {.panel-tabset}
+
+# Spatial risk mapping
+
+Throughout this session we have focused on **dynamic** spatial models: given that a disease is present somewhere, how does it spread? But a closely related and practically important question is: **where** should we be looking in the first place, and how do we communicate spatial risk to decision makers?
+
+Spatial risk maps are a common output in applied infectious disease epidemiology. They can be constructed in different ways, and it is worth knowing the main approaches and how they relate to the dynamic models you have built today.
+
+
+# Spatial risk mapping
+
+## From dynamic models to spatial risk
+
+The first approach constructs a risk surface directly from a **dynamic transmission model**. The model simulates what happens if a pathogen is introduced into different locations, and the outputs (probability of a large outbreak, time to detection, health system capacity to respond) are then mapped spatially.
+
+[Moss et al. (2016)](https://doi.org/10.1371/journal.pntd.0005018){target="_blank"} illustrate this approach in the context of a potential importation of Ebola Virus Disease into the Asia-Pacific region. The framework used a network metapopulation structure directly analogous to the models in Part 3 of this session: countries in the region were nodes, connected by international air travel mobility flows. Stochastic transmission dynamics and health system constraints (detection capacity, isolation capacity, response time) were incorporated for each country. The model was then run repeatedly under different importation scenarios to estimate which countries were at greatest risk of a large uncontrolled outbreak.
+
+The key insight is that **risk here is not about ecological suitability**, it is about the combination of connectivity (how likely is importation?) and response capacity (how able is the health system to contain it?). A country geographically distant from West Africa could be at high risk if it has strong flight connections and a constrained health system. The outputs were mapped across the Asia-Pacific region to produce a spatial risk surface that could directly inform decisions about where to prioritise health system strengthening.
+
+> Moss, R., Hickson, R.I., McVernon, J., McCaw, J.M., Hort, K., Black, J.,
+> Madden, J.R., Tran, N.H., McBryde, E.S. & Geard, N. (2016). Model-informed
+> risk assessment and decision making for an emerging infectious disease in the
+> Asia-Pacific region. *PLOS Neglected Tropical Diseases*, 10(9), e0005018.
+> [https://doi.org/10.1371/journal.pntd.0005018](https://doi.org/10.1371/journal.pntd.0005018){target="_blank"}
+
+::: {.panel-tabset}
+
+## Overview
+
+The Moss et al. framework converts dynamic transmission model outputs into
+spatial risk estimates. The technical note below outlines the key mathematical
+steps.
+
+## Technical note: from transmission model to risk surface
+
+The core challenge is converting the output of a stochastic transmission model
+--- which produces a distribution of possible outbreak trajectories --- into a
+single spatial risk estimate that is actionable for decision makers. Two
+quantities are particularly useful.
+
+### Expected number of importations
+
+The first step is estimating how many infectious individuals are likely to
+arrive in a given country per unit time. If $\tau$ is the rate of infectious
+travellers departing the source country per day, and $p_i$ is the probability
+that a traveller from the source goes to country $i$ (estimated from air travel
+data), then the expected daily importation rate into country $i$ is:
+
+$$\mu_i = \tau \cdot p_i$$
+
+This is directly analogous to the $\ell_{ij}$ leaving rates in the metapopulation
+model from Part 2. For Ebola in West Africa in 2014--15, $\tau$ was estimated
+from reported case counts and known travel volumes, and $p_i$ from airline
+passenger data.
+
+### Probability of a major outbreak given importation
+
+Once an infectious individual arrives in country $i$, whether a major outbreak
+occurs depends on the local reproduction number $\mathcal{R}_0^{(i)}$ and the
+health system's ability to detect and isolate cases quickly. For a simple
+branching process model, the probability that a single importation leads to a
+major outbreak (rather than dying out stochastically) is approximately:
+
+$$P(\text{major outbreak} \mid \text{importation}) \approx \begin{cases} 1 - \dfrac{1}{\mathcal{R}_{\text{eff}}^{(i)}} & \mathcal{R}_{\text{eff}}^{(i)} > 1 \\ 0 & \mathcal{R}_{\text{eff}}^{(i)} \leq 1 \end{cases}$$
+
+Here $\mathcal{R}_{\text{eff}}^{(i)}$ is the effective reproduction number in country $i$, which is lower than
+$\mathcal{R}_0^{(i)}$ if there is either pre-existing immunity or some controls in place.
+
+### Probability of at least one major outbreak in a time window
+
+If importations arrive as a Poisson process with rate $\mu_i$ per day, then
+over a time window of $T$ days the expected number of importations is
+$\mu_i T$. Each importation independently seeds a major outbreak with
+probability $q_i = P(\text{major outbreak} \mid \text{importation})$. The
+probability of **at least one** major outbreak in country $i$ over the window
+is then:
+
+$$P(\text{outbreak in } i) = 1 - e^{-\mu_i \cdot q_i \cdot T}$$
+
+This is an exponential waiting-time result: the combined rate of
+outbreak-seeding events is $\mu_i \cdot q_i$, and the probability of seeing
+at least one in time $T$ follows from the Poisson distribution.
+
+### Mapping risk
+
+Evaluating this expression for each country $i$ in the network produces a
+scalar risk value between 0 and 1 for each node. These values can then be
+mapped spatially: a risk surface derived entirely from the dynamic model.
+
+In the Moss et al. framework, $\mathcal{R}_{\text{eff}}^{(i)}$ was itself
+a function of health system capacity: countries with stronger detection and
+isolation capacity had lower effective reproduction numbers, and therefore
+lower $q_i$. This means the risk surface reflects both the network structure
+(who is connected to the source?) and the local response capacity (can the
+health system contain what arrives?). Two countries with identical importation
+rates can have very different outbreak risks depending on their health systems.
+
+
+:::
+
+---
+
+## Bridging dynamics and ecology: vectorial capacity frameworks
+
+Between a pure dynamic model and a pure ecological species distribution model (for presence probability) sits an intermediate approach: spatially explicit frameworks that incorporate mechanistic transmission quantities, such as vectorial capacity, into a risk surface derived from species distributions.
+
+![**Figure 6 from Skinner et al. (2025):** Conceptual framwework for estimatinga and ecological suitability index for human spillover potential for Japanese encephalitis virus (JEV) in Australia. Figure 6 from Skinner
+et al. (2025), shared under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).](journal.pntd.0013722.g006.PNG)
+
+[Skinner et al. (2025)](https://doi.org/10.1371/journal.pntd.0013722){target="_blank"} developed exactly this kind of framework for Japanese Encephalitis virus (JEV) in Australia. Rather than simply asking whether mosquitoes, waterbirds, and feral pigs co-occur (an ecological question), they estimated the **vectorial potential** of each *Culex* species at each location based on temperature-dependent mosquito biology, then combined this with host distributions and human population exposure to produce two outputs: an ecological suitability index for JEV, and a spillover potential to human populations if endemic transmission is established.
+
+This is a direct bridge between the ecological risk mapping of Sexton et al. below and a full dynamic transmission model: it asks not just "are the right species here?" but "given the mosquito biology at this location, how efficiently would the virus actually circulate?" The finding that large parts of eastern and southern Australia, including densely populated regions, may be suitable for JEV spillover helps explain why the 2022 outbreak, though unexpected geographically, was not implausible in mechanistic terms.
+
+> Skinner, E.B., Sartorius, B., Furuya-Kanamori, L., Craig, A.T., Kiani, B.,
+> Johnson, B.J., Moore, K.T., Hickson, R.I., Mordecai, E.A., Devine, G. &
+> Lau, C.L. (2025). Ecological suitability of Japanese encephalitis virus in
+> Australia: a modelling analysis of vector-host transmission dynamics to
+> potential spillover in humans. *PLOS Neglected Tropical Diseases*, 19(11),
+> e0013722.
+> [https://doi.org/10.1371/journal.pntd.0013722](https://doi.org/10.1371/journal.pntd.0013722){target="_blank"}
+
+::: {.panel-tabset}
+
+## Overview
+
+The Skinner et al. (2025) framework sits between a pure ecological SDM and a
+full dynamic transmission model. Rather than simply asking whether the right
+species co-occur, it asks: given the mosquito biology at this location, how
+efficiently would JEV actually circulate? The technical note below outlines
+the key mathematical quantity and shows how the species distributions feed
+through to a spatially explicit spillover risk surface.
+
+## Technical note: vectorial capacity and spillover potential
+
+### Vectorial capacity
+
+The central quantity in the Skinner et al. framework is the **daily vectorial
+capacity** $V$, which measures the expected number of infectious bites delivered
+to humans per infectious human per day by the local mosquito population. A simpler version from Macdonald (1957, *The Epidemiology and Control of Malaria*. Oxford University Press, London. And more recently the derivation walked through by [Smith and McKenzie](https://doi.org/10.1186/1475-2875-3-13){target="_blank"}) defines this for each location as:
+
+$$V = \frac{m \cdot a^2 \cdot b \cdot c \cdot e^{-g n}}{g}$$
+
+where:
+
+- $m$ is the local mosquito-to-human ratio
+- $a$ is the daily biting rate (bites per mosquito per day)
+- $b$ is the probability that a bite from an infectious mosquito infects a human
+- $c$ is the probability that a bite on an infectious human infects the mosquito
+- $g$ is the daily mosquito mortality rate
+- $n$ is the extrinsic incubation period (days for the virus to develop in the
+  mosquito to the point of infectiousness)
+- $e^{-gn}$ is therefore the probability a mosquito survives long enough to
+  become infectious
+
+The $e^{-gn}$ term is the key source of nonlinearity. Both $g$ (mortality) and
+$n$ (incubation period) are strongly temperature-dependent, so small changes in
+temperature can have large effects on vectorial capacity, which is why
+temperature range variables dominate the species distribution models in Sexton
+et al. A location that is too cool will have mosquitoes that die before the
+virus completes its extrinsic incubation period, regardless of how many
+mosquitoes are present.
+
+Vectorial capacity is also directly related to $\mathcal{R}_0$ for a
+vector-borne disease:
+
+$$\mathcal{R}_0 \propto V$$
+
+so the spatial map of $V$ is essentially a spatial map of transmission potential. Exactly the kind of quantity you would feed into the dynamic models from Parts 1 and 2 of this session.
+
+### From species distributions to spillover potential
+
+The individual species presence probabilities (Figure 7 from Skinner et al) feed directly into
+the vectorial capacity calculation: mosquito presence probability scales $m$,
+and the waterbird and feral pig distributions determine the availability of
+reservoir and amplifying hosts. Combining these with temperature-dependent
+estimates of $a$, $g$, and $n$ at each location produces a spatially explicit
+vectorial capacity surface. This is then multiplied by human population density
+to give the **spillover potential**, the expected transmission risk to humans
+given an introduction event (Figure 6).
+
+![**Figure 7 from Skinner et al. (2025):** Individual species presence
+probability maps for the key species in the JEV transmission cycle, including
+*Culex* mosquito vectors, waterbird reservoir hosts, and feral pigs as
+amplifying hosts. These distributions feed directly into the vectorial capacity
+calculation. *Reproduced from Skinner et al. (2025) under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).*](journal.pntd.0013722.g007.PNG)
+
+### Connection to the dynamic models in this session
+
+The Skinner et al. framework stops short of simulating transmission dynamics. It tells you *where* and *how efficiently* JEV could circulate, but not *how many cases* would result or *how an outbreak would spread* over time. The
+natural next step is to use the spatially explicit vectorial capacity surface
+as input to a dynamic metapopulation or reaction-diffusion model: each patch
+inherits a local $\mathcal{R}_0$ derived from $V$, and the dynamic model then
+simulates spread between patches via human movement. This integration of
+ecological realism with transmission dynamics is an active area of current
+research.
+
+:::
+---
+
+## From ecological models to spatial risk
+
+The third approach constructs a risk surface from **species distribution models (SDMs)**: statistical models that estimate the probability of a species being present at a given location based on environmental conditions. For a vector-borne or zoonotic disease, this means modelling the distributions of all the species in the transmission cycle and combining them into a co-occurrence probability.
+
+[Sexton et al. (preprint, 2025)](https://ssrn.com/abstract=5819195){target="_blank"} used Maximum Entropy (MaxEnt) SDMs to estimate the presence probability of each species in the JEV transmission cycle across Australia, then combined these into a **sylvatic co-occurrence probability (CoP)**:
+
+$$P(\text{JEV sylvatic CoP}) = P(\text{mosquito}) \times P(\text{waterbird} \cup \text{feral pig})$$
+
+This was projected forward to 2050 and 2090 under two climate change scenarios (RCP 4.5 and RCP 8.5). Key findings were that coastal regions of high CoP are likely to remain high under both scenarios, that mosquito presence is strongly driven by temperature range and aridity, and that some regional shifts, particularly a decrease in south-western Australia, are consistent across climate models.
+
+> Sexton, J., Golchin, M., Hoskins, A. & Hickson, R.I. (preprint, 2025).
+> Japanese Encephalitis Virus sylvatic co-occurrence probabilities under a
+> changing climate. SSRN preprint.
+> [https://ssrn.com/abstract=5819195](https://ssrn.com/abstract=5819195){target="_blank"}
+
+The interactive map below shows the projected JEV co-occurrence probability across Australia for 2025 (baseline), allowing you to explore the spatial patterns described in the paper.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(leaflet)
+library(terra)
+
+cop <- terra::rast("jev_cop_2025_georef.tif")
+
+pal <- colorNumeric(
+  palette  = c("#FFFFFF", "#FFF7BC", "#FEC44F", "#D95F0E", "#7F0000"),
+  domain   = c(0, 1),
+  na.color = "transparent"
+)
+
+leaflet() |>
+  addTiles(urlTemplate = "", attribution = "") |>
+  setView(lng = 134, lat = -27, zoom = 4) |>
+  addRasterImage(cop, colors = pal, opacity = 1.0, project = FALSE) |>
+  addLegend(
+    position  = "bottomright",
+    pal       = pal,
+    values    = c(0, 1),
+    title     = "JEV Co-occurrence<br>Probability (2025)",
+    opacity   = 0.9
+  )
+```
+
+<p><br></p>
+
+::: speaker-note
+The map above uses the actual JEV co-occurrence probability raster from Sexton
+et al. (2025), available from the CSIRO Data Access Portal at
+[https://doi.org/10.25919/feye-9073](https://doi.org/10.25919/feye-9073){target="_blank"}.
+The `terra` and `leaflet` packages are required: add
+both to the package check in the session overview facilitator note. The raster
+is on an 0.05 decimal degree grid so renders cleanly at national scale without
+any resampling.
+:::
+
+### Comparing to the Poisson process approach
+
+Both approaches produce a number between 0 and 1 for each location, but they
+mean different things:
+
+- The SDM co-occurrence probability $P(\text{JEV CoP})$ asks: *are the right
+  ecological conditions present?*
+- The dynamic risk $P(\text{outbreak in } i)$ asks: *given the current
+  epidemiological situation, will an outbreak occur here within a given
+  timeframe?*
+
+The former is relatively stable over time (ecology tends to change slowly, though can be disrupted more quickly with human interventions such as land use changes); the latter can change rapidly as the source outbreak grows or shrinks, as travel patterns
+change, or as health systems are strengthened. Both are useful, and both have their place in a comprehensive spatial risk assessment.
+
+---
+
+## A progression of approaches
+
+The three papers above illustrate a natural progression from dynamic modelling toward ecological risk mapping and back again:
+
+| | Moss et al. (2016) | Skinner et al. (2025) | Sexton et al. (2025) |
+|---|---|---|---|
+| **Disease** | Ebola (potential importation) | JEV (endemic risk) | JEV (endemic risk) |
+| **Modelling approach** | Dynamic network metapopulation | SDM + vectorial capacity framework | Species distribution models (MaxEnt) |
+| **Risk is defined as** | Probability of uncontrolled outbreak given importation | Ecological suitability index + human spillover potential | Probability of co-occurrence of transmission cycle species |
+| **Key drivers** | Connectivity + health system capacity | Mosquito biology + host distributions + human exposure | Climate + ecology |
+| **Primary use** | Health system preparedness, resource allocation | Spillover risk mapping, identifying high-risk human populations | Surveillance prioritisation, climate adaptation planning |
+
+The natural next step is to extend the Skinner et al. framework into a full dynamic transmission model: one that not only maps where spillover is ecologically plausible, but simulates how infection would spread through the human population once it arrives. This would close the loop between the ecological and dynamic modelling traditions, combining the spatial realism of SDMs with the transmission dynamics of the models you have built in this session.
+
+---
+
+**B.1 Look at the JEV co-occurrence map above and consider south-eastern Australia. The 2022 outbreak occurred in this region, which the map suggests is only moderate risk. Does this mean the model was wrong? What does it suggest about the limitations of climatological SDMs for predicting outbreak timing?**
+
+```{=html}
+<textarea cols="127" rows="4"></textarea>
+```
+<p><br></p>
+
+**B.2 The Moss et al. (2016) framework used a network metapopulation model similar to Part 3 of this session, but expressed the output as a spatial risk map rather than epidemic curves. What does this change about how the results can be used by decision makers? What is gained and what is lost compared to showing epidemic curves directly?**
+
+```{=html}
+<textarea cols="127" rows="4"></textarea>
+```
+<p><br></p>
+
+> **Further reading:** For a practical introduction to MaxEnt species distribution
+> modelling in R, the `dismo` and `ENMeval` packages are good starting points.
+> For a worked example combining SDM outputs with dynamic transmission models
+> at a global scale, see Messina et al. (2019) on dengue global risk mapping:
+> [https://doi.org/10.1038/s41564-019-0476-8](https://doi.org/10.1038/s41564-019-0476-8){target="_blank"}
+
+---
+
+## **Bonus:** Solutions
+
+::: {.panel-tabset}
+
+## **Bonus:** Spoiler alert
+
+The solutions tab contains suggested answers. **Only click on it if you have tried the questions yourself.**
+
+## **Bonus:** Solutions
+
+**B.1** The model was not wrong. It correctly identified that south-eastern Australia has only moderate climatological suitability for the JEV transmission cycle under average conditions. The 2022 outbreak is better understood as a consequence of conditions the SDM does not capture: an exceptionally wet La Niña season in 2021--22 dramatically expanded temporary wetland habitat into southern regions, providing unusually favourable mosquito breeding conditions far beyond their typical range. This is a fundamental limitation of climatological SDMs: they reflect mean or historical climatic conditions and cannot anticipate anomalous years. The model tells you where outbreaks are likely *on average*; it does not tell you when an unusual season will temporarily make an unlikely location hospitable. The Skinner et al. vectorial capacity framework goes some way toward addressing this, since temperature-dependent mosquito biology means that a cooler southern location might still support transmission during an anomalously warm or wet year. A full dynamic model of mosquito population response to rainfall and temperature, layered onto the baseline risk surface, would be the most complete approach.
+
+<p><br></p>
+
+**B.2** Expressing model outputs as spatial risk maps rather than epidemic curves changes the audience and the decision the results can support. Epidemic curves show transmission dynamics, useful for epidemiologists reasoning about intervention timing and magnitude. A spatial risk map shows *where* to act, which is directly actionable for resource allocation: which countries to prioritise for health system strengthening, where to pre-position supplies, where to focus surveillance. The gain is accessibility and actionability for decision makers who are not modellers. The loss is nuance: a risk map collapses the full distribution of modelled outcomes into a single surface, hiding the uncertainty and the dynamic trajectory. A country shown as "high risk" might be high risk because it has high importation probability, or because it has low response capacity, or both, and the intervention implications differ. Showing both the map and the underlying epidemic curves, as Moss et al. do, is the most complete communication strategy.
+
+:::
 
 :::
