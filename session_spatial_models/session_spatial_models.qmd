@@ -100,6 +100,14 @@ This session is divided into three parts:
 -   When to use which type of spatial model
 -   What we have not covered
 
+**Bonus** Spatial risk mapping:
+
+Bonus materials for those interested in spatial risk mapping in particular, not expected to be covered during the 3 hours.
+
+- From dynamic disease transmission models to spatial risk
+- Species distribution models
+- Bridging disease dynamics and ecology
+
 *We recommend saving your text at the end of each part by printing the file.*
 
 ---
@@ -580,7 +588,37 @@ The reaction-diffusion framework assumes populations are spread smoothly across 
 
 A **metapopulation model** divides the population into discrete **patches** (also called subpopulations, regions, or nodes): think towns, suburbs, or countries. "Metapopulation" literally means "a population of populations". Unlike the conceptual bridge note above, these do not need to be spatially contiguous. Within each patch the well-mixed assumption is applied. Patches are then coupled by movement between them. 
 
-This structure is one of the most practically useful spatial approaches for infectious disease in humans. It maps naturally onto the way population data is collected (by administrative region), is relatively straightforward to implement, and can capture the effects of human mobility patterns in a principled way.
+There are several ways to structure the connections between patches, and the
+choice matters for the dynamics:
+
+- **Island (hub) model:** all patches connect equally to a central hub, with
+  symmetric flows. A **source-sink** variant arises when flows are strongly
+  asymmetric --- as in the PNG--Torres Strait Islands TB example, where 98%
+  of movements were PNG nationals travelling into the Torres Strait, making
+  PNG a persistent source. This is captured naturally in the commuter framework
+  by setting asymmetric $\ell_{ij}$ values rather than requiring a separate
+  model structure.
+- **Stepping-stone model:** patches only connect to their immediate neighbours.
+  The grid version below is exactly the coarse patch grid from Part 1 --- the
+  same spatial structure, just with each cell now treated as a distinct
+  subpopulation. The ring version shows the same connectivity principle
+  abstracted into the node-and-edge notation used in network diagrams.
+- **Commuter model:** patches are fully (or partially) connected by realistic
+  human mobility flows, with individuals leaving their home patch, spending
+  time elsewhere, and returning. Movement rates can be estimated from census
+  data, mobile phone records, or airline passenger data. Line thickness in the
+  figure below represents flow strength. This is the framework we will use in
+  this session.
+
+<center><img src="fig_metapop_types.png" width="95%"/></center>
+
+<p><br></p>
+
+This structure is one of the most practically useful spatial approaches for
+infectious disease in humans. It maps naturally onto the way population data
+is collected (by administrative region), is relatively straightforward to
+implement, and can capture the effects of human mobility patterns in a
+principled way.
 
 ---
 
@@ -1137,15 +1175,68 @@ So patch-1 residents spend about 10% of their time in patch 2, while patch-2 res
 
 # **Part 3:** Network models
 
+
+
 ## From metapopulation to network
 
 ::: speaker-note
-The transition from metapopulation to network is conceptually small but important to make explicit. The key insight: in the metapopulation model of Part 2, all patches were connected to all others (or connected via a gravity/radiation formula). A network model just allows that connectivity to be completely arbitrary --- some pairs of nodes are connected, others are not, and connections can have different strengths. In practice, this means a network model is a metapopulation model with a specific and potentially heterogeneous structure imposed on the $\ell_{ij}$ matrix. Participants who found Part 2 challenging may find it helpful to hear: "everything you just built is a network model; we are now asking what happens when the network looks very different from a uniform one."
+The transition from metapopulation to network is conceptually small but important to make explicit. The key insight: in the metapopulation model of Part 2, all patches were connected to all others (or connected via a gravity/radiation formula). A network model just allows that connectivity to be completely arbitrary: some pairs of nodes are connected, others are not, and connections can have different strengths. In practice, a network model is a metapopulation model with a specific and potentially heterogeneous structure imposed on the $\ell_{ij}$ matrix. Participants who found Part 2 challenging may find it helpful to hear: "everything you just built is a network model; we are now asking what happens when the network looks very different from a uniform one."
 :::
 
-In the metapopulation models we have been using, the coupling between patches is often assumed to be the same for all pairs (or to follow a simple distance-based formula). But real populations are not like that: some cities are major hubs with connections to dozens of other places, while others are only connected to their immediate neighbours. This is naturally described as a **network**, where patches are **nodes** and the travel connections between them are **edges**.
+The metapopulation models in Part 2 assumed a specific structure for how patches
+connect: a commuter framework where every patch can in principle be linked to
+every other, with movement rates estimated from mobility data. A **network
+model** generalises this completely. Rather than deriving connectivity from a
+formula, we specify it directly: which nodes are connected, and how strongly.
+This lets us represent the full diversity of real contact or mobility structures,
+from sparse local connections to the extreme heterogeneity of a hub-and-spoke
+air travel network. The metapopulation model is a special case of a network
+model where every pair of nodes has a non-zero connection. Network models become
+most useful when that connectivity is sparse, heterogeneous, or when the
+structure itself is the thing we want to study.
 
-Network models and metapopulation models are closely related. The key difference is that network models explicitly represent the *heterogeneity* in connectivity: some nodes have many connections (high **degree**), others have few. This heterogeneity turns out to have major consequences for disease dynamics.
+Network models can also represent contact or movement structure at very different
+scales, and the choice of what a node represents has major implications for both
+the model and the questions it can answer.
+
+![The same epidemic process can be modelled at very different scales. Left:
+individual contacts, with node colour showing disease status (blue = S, orange
+= I, grey = R). Middle: household clusters, with dense within-household contacts
+(solid lines) and sparse between-household contacts (dashed lines); the
+transmission narrative shows an index case in household 1 seeding household 2
+via a between-household contact. Right: population-level nodes sized by
+population with edge width proportional to mobility
+flow.](fig_network_scales.png){width=95%}
+
+**Individual-level networks** place each person as a node, with edges
+representing direct contacts (these two people can infect each other). This is the most biologically realistic
+representation, but it requires detailed contact data and becomes computationally
+demanding for large populations. Individual-level networks are most useful for
+diseases where the specific identity and timing of contacts matters: sexually
+transmitted infections, where the network of sexual partnerships is the
+transmission network; nosocomial infections, where individual patient-staff
+contact patterns in a ward determine spread; or detailed household transmission
+studies.
+
+**Household-level networks** aggregate individuals into households as nodes,
+with edges representing contacts between households through workplaces, schools,
+or community settings. This is a natural middle ground for respiratory diseases:
+within-household transmission is often treated as effectively complete (once one
+household member is infected, others are at high risk), while between-household
+transmission drives community spread. Household network models have been widely
+used for first few hundred type studies, or more specifically for influenza, COVID-19, and measles.
+
+**Population-level networks** place each subpopulation (a city, region, or
+country) as a node, with edges representing movement or mobility flows between
+them. This is the metapopulation framework from Part 2, described in network
+language. The key difference is that network models do not assume a specific
+functional form for connectivity such as the gravity model. Instead, the
+network structure is specified directly, allowing more heterogeneous and
+empirically derived connectivity patterns.
+
+We will look at three network types: random, small-world, and scale-free. These can be applied at any of these levels, but are most commonly discussed in the context of individual or household contact networks, where heterogeneity in the
+number of contacts per node (the degree distribution) has the most direct
+epidemiological interpretation.
 
 ---
 
@@ -1436,7 +1527,7 @@ the full distribution of outcomes becomes clear: the scale-free network shows mu
 
 ---
 
-# Synthesis
+# **Part 4.** Synthesis
 
 ## When to use which spatial model
 
