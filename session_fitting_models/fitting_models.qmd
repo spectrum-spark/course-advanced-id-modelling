@@ -18,6 +18,9 @@ The next step, which can often be the hardest, is determining the value of your 
 Sometimes, a thorough literature search may help with understanding the value of a parameter, but often it is up to the researcher to obtain data and determine which parameter values give the best fit. 
 The focus of the next two sessions is to give you practical experience in fitting infectious disease models to data. 
 
+The fitting of mathematical models is inherently tied to statistics.
+We measure data, we develop a "model" for how that data was obtained, and in turn we measure what parameters the model must have to generate the data. 
+There are multiple approaches to this problem and two different interpretations of the data generation process. 
 
 ### Frequentist vs Bayesian Statistics (an overview)
 Statistics consists of two main approaches, Frequentist statistics and Bayesian statistics. 
@@ -123,16 +126,17 @@ $$
 p(\mu) = \mathcal{N}(\mu|0,\lambda^2)
 $$
 where $\lambda$ is the variance we expect in our prior belief around $\mu$. 
-Having defined all of this, the distribution for our mean is (using Bayes' Theorem, which we will get to),
+Having defined all of this, the distribution for our mean is (using Bayes' Theorem),
 $$
 \begin{aligned}
 p(\theta|D) &\propto \prod_{i=1}^{20} \mathcal{N}(D_i | \mu, \sigma^2)\mathcal{N}(\mu|0,\lambda^2) \nonumber \\
 &\propto \exp\left(-\frac{20}{2\sigma^2}( \bar{D} - \mu)^2 -\frac{\mu^2}{2\lambda^2}\right) \\
 &\propto \exp\left(-\frac{20}{2\sigma^2}\mu^2 -\frac{20}{2\sigma^2}2 \bar{D} \mu -\frac{\mu^2}{2\lambda^2}\right) \\
 &\propto \exp\left(-\frac{20\lambda^2 + \sigma^2}{2\sigma^2\lambda^2}\left(\mu^2 -2 \frac{20\lambda^2}{20 \lambda^2 + \sigma^2} \bar{D} \mu -\frac{\mu^2}{2\lambda^2}\right)\right) \\
-&\propto \exp\left(-\frac{20\lambda^2 + \sigma^2}{2\sigma^2\lambda^2}\left(\mu -\frac{20\lambda^2}{20 \lambda^2 + \sigma^2} \bar{D}\right)^2\right) 
+&\propto \exp\left(-\frac{20\lambda^2 + \sigma^2}{2\sigma^2\lambda^2}\left(\mu -\frac{20\lambda^2}{20 \lambda^2 + \sigma^2} \bar{D}\right)^2\right),
 \end{aligned}
 $$
+where $\bar{D}$ is the empirical mean of our data. 
 
 
 ::: {.callout-note}
