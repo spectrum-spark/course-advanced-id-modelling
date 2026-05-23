@@ -1,0 +1,131 @@
+---
+title: SPARKLE Training Course
+subtitle: Fitting Models - Maximum Likelihood
+format:
+  training-html: default
+presenter: "Dr Eamon Conway"
+contributors: [Dr Eamon Conway"]
+---
+
+## Maximum likelihood
+The maximum likelihood method for fitting mathematical models to data is perhaps the most common method used to fit models to data.
+In this approach, we must be able to write down our distributional assumptions for how the model fits the data.
+This is called the likelihood, $\mathcal{L}$.
+
+Assume we have a mathematical model with unknown parameters $\theta$ and that we have collected $N$ data points $D$.
+The likelihood is expressed as,
+$$
+\mathcal{L}(\theta) = p(D|\theta),
+$$
+where $p(D|\theta)$ is the probability of obtaining the observed data given known model parameters.
+By writing down the likelihood we are now in a position to decide on the value of $\theta$ using strong theoretical foundations.
+
+A reasonable argument to be made is that the value of $\theta$ is that which maximises the probability of the data that we observed.
+As such, the model fit is obtained by solving
+$$
+\hat{\theta} = \arg \max_{\theta \in \Theta} \mathcal{L}(\theta),
+$$
+where $\hat{\theta}$ is the fitted model parameters and $\Theta$ is the entire parameter space.
+This is the maximum likelihood method.
+
+::: {.callout-tip title=Log-likelihood}
+It is more common to maximise the log-likelihood than the likelihood.
+This is because of the **MANY** numerical benefits of working with log probabilities instead of probabilities.
+
+The reason why maximising the log-likelihood and the likelihood obtain the same answer is because the $\log$ function is monotonically increasing.
+:::
+
+::: {.callout-note title="Normal data example" collapse="true"}
+For a simple example, lets assume
+$$
+D \sim \mathcal{N}(\mu,\sigma^2),
+$$
+where $\mu$ is the mean, and $\sigma^2$ is the **KNOWN** variance of the sample.
+
+From the measured data we are trying to infer $\mu$ but we know $\sigma^2$.
+The likelihood for this example would be,
+$$
+\mathcal{L}(\mu) = \prod_{i=1}^N \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(D_i - \mu)^2}{2\sigma^2}} = \left(\frac{1}{\sigma \sqrt{2 \pi}}\right)^N e^{-\frac{1}{2\sigma^2}\sum_{i=1}^N (D_i - \mu)^2},
+$$
+where $D_i$ is the $i$th data point. Therefore we have that the log-likelihood is,
+$$
+\log \mathcal{L}(\mu) = -N(\log\sigma + \log\sqrt{2\pi}) + {-\frac{1}{2\sigma^2}\sum_{i=1}^N (D_i - \mu)^2},
+$$
+which has stationary points at,
+$$
+\frac{d}{d \mu}\left\{ \log \mathcal{L}(\mu)\right\} =  {-\frac{1}{2\sigma^2}\sum_{i=1}^N (D_i - \mu)^2} = 0.
+$$
+The solution of which is the maximum likelihood estimate for the mean,
+$$
+\hat{\mu} = \frac{1}{N}\sum_{i=1}^N D_i
+$$
+:::
+
+::: {.callout-note title="Linear regression" collapse="true"}
+Let us assume that we have collected data $(X,Y) = [(x_1,y_1), (x_2,iy_2),..., (x_N,y_N)]$ where $X$ is a known covariate and $Y$ is the response.
+We have reason to believe that the model for this data is linear regression,
+$$
+y_i = ax_i + b + \epsilon
+$$
+where $\epsilon \sim \mathcal{N}(0,\sigma^2)$, with variance $\sigma^2$, and we want to be inferring both $a$ and $b$.
+
+Due to the properties of the normal distribution, an equivalent way to express our model,
+$$
+Y\sim \mathcal{N}(\mu(X),\sigma^2),
+$$
+where $\mu(x) = ax+b$.
+This corresponds to a likelihood of the form,
+$$
+\mathcal{L}(a,b) = \left(\frac{1}{\sigma \sqrt{2 \pi}}\right)^N e^{-\frac{1}{2\sigma^2}\sum_{i=1}^N (D_i - aX_i - b)^2}.
+$$
+That stationary points are the solutions to,
+$$
+\begin{aligned}
+\left.\left.\frac{d}{d a}\right( \log \mathcal{L}(a,b)\right) =  \frac{1}{\sigma^2}\sum_{i=1}^N (Y_i - aX_i - b)X_i = 0 \\
+\left.\left.\frac{d}{d a}\right( \log \mathcal{L}(a,b)\right) =  \frac{1}{\sigma^2}\sum_{i=1}^N (Y_i - aX_i - b) = 0
+\end{aligned}
+$$
+or in matrix form (have some fun and figure this out),
+$$
+\bf{X}^T \bf{X}\beta = \bf{X}^T \vec{Y},
+$$
+where $\bf{X} = [x,1]^T$, $\beta = [a,b]$ and $\vec{D}$ is a vector containing the data.
+These equations are also known as the [Normal Equations](https://en.wikipedia.org/wiki/Ordinary_least_squares#Normal_equations) and are used in Ordinary Least Squares to minimise the distance between a straight line and observed data.
+This is a coincidence as [Ordinary Least Squares](https://en.wikipedia.org/wiki/Ordinary_least_squares) can be interpreted as a maximum likelihood method where the data is normally distributed.
+
+:::
+
+::: {.callout-note title="Poisson Regression" collapse="true"}
+Assuming that the data generation process is normally distributed is not enough to describe all physical phenomenon (no matter how badly you understand the Central Limit Theorem).
+As such, you might collect data, $Y$,  and propose a Poisson model,
+$$
+Y \sim \text{Poisson}(\mu)
+$$
+where $\mu$ is the mean of the distributed.
+In such a situation, using maximum likelihood is still valid and our likelihood would be,
+$$
+\mathcal{L}(\mu) = \prod_{i=1}^N \frac{\mu^{y_i} e^{-\mu}}{y_i!} = \frac{\mu^{\sum_{i=1}^N y_i} e^{-N\mu}}{\prod_{i=1}^N y_i!}.
+$$
+By following the exact same procedure as before, we find the stationary points by solving
+$$
+\left.\left.\frac{d}{d\mu}\right(\log\mathcal{L}(\mu)\right) = (\sum_{i=1}^N y_i)\frac{1}{\mu} -N = 0.
+$$
+Therefore,
+$$
+\hat{\mu} = \frac{1}{N}\sum_{i=1}^N y_i,
+$$
+where $\hat{\mu}$ has been used to denote the maximum likelihood estimate.
+:::
+
+In the examples provided we derived an exact form for the maximum likelihood estimate of our parameters.
+It is not always the case that we can obtain the maximum of our likelihood function using pen and paper.
+Therefore, we often use numerical techniques to approximate our solution.
+
+## Numerical methods for maximum likelihood problems.
+To obtain a numerical solution to a maximum likelihood problem you must look at the solution methods that maximise functions (of course right).
+There are a lot of different techniques and I will not go through them all, especially when the best approach is often problem dependent.
+A short list of techniques that find maximums (or equivalently minimums) are:
+
+- Newton-Rhapson
+- Nelder-Mead
+- Run every possible combination of parameters and check which is the largest or smallest (only suitable if the dimension of the parameter space is reasonable, but I have done this more often than you expect).

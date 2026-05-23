@@ -1,0 +1,36 @@
+---
+title: "Monte Carlo Methods"
+---
+
+Monte Carlo methods are a broad range of techniques associated with approximating solutions to mathematical problems through repeated sampling (hence the name after the famous casino).
+It is often likened to throwing darts at a problem and seeing which ones manage to stick.
+
+To exemplify the a Monte Carlo approach, lets consider approximating the area of a circle with unit diameter.
+
+  - As a first step, lets pretend that this is actually a really tough problem and we do not know the answer is $\frac{\pi}{4}$. 
+  - For the second step, if the circle has unit diameter then we can place the circle entirely within a square with unit side lengths.
+  - Next, lets throw 10000 darts at our square!
+
+```{r }
+dart_throw_locations = tibble::tibble(x = runif(10000,-0.5,0.5), y = runif(10000,-0.5,0.5))
+dart_throw_hits = dart_throw_locations |> 
+  dplyr::mutate(Hit = (x^2+y^2) < (0.5)^2)
+
+ggplot2::ggplot(dart_throw_hits, ggplot2::aes(x = x,y =y, color = Hit)) + ggplot2::geom_point()
+
+area = dart_throw_hits |>
+  dplyr::summarise(n = dplyr::n(), .by = tidyselect::all_of("Hit")) |>
+  dplyr::mutate(proportion = n/sum(n))
+print(area)
+print(pi/4)
+```
+The above code emulates the $x$ and $y$ location of each dart throw on our unit square. 
+By visualising these plots over our circle, we can observe that some of the darts have succeeded in being inside the circle and some have not. 
+We know that those darts had equal probability of being anywhere inside that square.
+Therefore, if we were to count the number of darts that were inside of the circle and compare that to the number that were outside of the circle, we are approximating the percentage area of the square that the circle takes up. 
+Due to the fact that the square has an area of 1 unit$^2$ we are approximating exactly the area of the circle (and not some scalar multiple of the circle).
+
+What does this mean?
+We can use random sampling to help answer our questions.
+We can use an Accept-Reject step to take something that is similar to what we want and turn it into exactly what we want. 
+
