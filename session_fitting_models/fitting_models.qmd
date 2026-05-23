@@ -183,6 +183,11 @@ ggplot2::ggplot(plot_data,ggplot2::aes(x = Mean, fill = Distribution)) +
     ggplot2::theme_minimal(base_size = 10)
 ```
 
+## Model fitting
+[Maximum Likelihood](maximum_likelihood.qmd)
+
+[Bayesian Inference](bayesian_inference.qmd)
+
 <!-- ### But that seemed easy? Isn't Bayesian statistics hard and full of sampling?
 Yeah, I hid all of the complicated nonsense hidden with a wonderful $\propto$ sign.
 In doing so, I hid all of the complicated integrals and all the complicated nonsense. 
