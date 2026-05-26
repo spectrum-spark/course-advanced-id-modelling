@@ -29,8 +29,12 @@ website:
         href: index.qmd
       - text: "Sessions"
         menu:
-          - text: "Session 1: Introduction to version control"
-          - href: session_spatial_models/session_spatial_models.qmd
+          - text: "Session 1: Recap of infectious disease modelling concepts"
+            href: session_intro_id_modelling/session_intro_id_modelling.qmd
+          - text: "Session 2: Fitting models"
+            href: session_fitting_models/fitting_models.qmd
+          - text: "Session 3: Introduction to spatial models"
+            href: session_spatial_models/session_spatial_models.qmd
     
   page-footer:
     left: |

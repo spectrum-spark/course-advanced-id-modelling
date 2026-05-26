@@ -4,14 +4,14 @@ title: SPARKLE Training Course
 
 ## Introduction
 
-Testing 1 2 3
+This course builds on introductory infectious disease modelling concepts and gives students practice adapting, fitting, and extending transmission models.
 
+## Sessions
 
-## Introduction to spatial modelling
+1. [Recap of infectious disease modelling concepts](session_intro_id_modelling/session_intro_id_modelling.qmd)
+2. [Fitting models](session_fitting_models/fitting_models.qmd)
+3. [Introduction to spatial models](session_spatial_models/session_spatial_models.qmd)
 
-We will briefly cover these topics:
+## Session 1: Recap of infectious disease modelling concepts
 
-1. Spatially explicit models (reaction diffusion)
-2. Metapopulation approaches
-3. Network models
-4. Briefly mention what we haven't covered
+This first session refreshes compartmental modelling, reproduction numbers, and likelihoods. It includes hands-on activities translating between diagrams and equations, explaining model terms in words, interpreting effective reproduction number trajectories, and refitting a simpler model to simulated outbreak data.
