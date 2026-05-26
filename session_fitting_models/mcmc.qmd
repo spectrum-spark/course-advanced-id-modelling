@@ -52,18 +52,8 @@ What does this mean?
 We can use random sampling to help answer our questions.
 We can use an Accept-Reject step to take something that is similar to what we want and turn it into exactly what we want. 
 
-## Markov Chain Monte Carlo 
 
-Can you Monte Carlo your way to a Markov Chain with known stationary distribution?
-
-Markov Chain Monte Carlo allows us to sample from the probability distribution $\pi(x)$, which may not have been possible before.
-
-::: {.callout-warning}
-If you can sample exactly from the distribution, you do not need to use Markov Chain Monte Carlo.
-For example, if you want to sample from a normal distribution, just sample from the normal distribution.
-:::
-
-## Markov Chains
+## Overview of Markov Chains
 ::: {.callout title="Discrete Markov Chains"}
 A discrete Markov Chain is a sequence of random variables that satisfy the Markov property.
 That is, the next random variable in the sequence only depends upon the current state,
@@ -81,8 +71,17 @@ where $\pi(x)$ is the stationary distribution of the Markov Chain and $p(x|x')$ 
 The flow out of $x$ into $x'$ is balanced by the flow from $x'$ into $x$.
 :::
 
+## Markov Chain Monte Carlo 
 
-## Markov Chain Monte Carlo
+Can you Monte Carlo your way to a Markov Chain with known stationary distribution?
+
+Markov Chain Monte Carlo allows us to sample from the probability distribution $\pi(x)$, which may not have been possible before.
+
+::: {.callout-warning}
+If you can sample exactly from the distribution, you do not need to use Markov Chain Monte Carlo.
+For example, if you want to sample from a normal distribution, just sample from the normal distribution.
+:::
+
 It would be extremely helpful if we could easily construct the transition probabilities of a Markov Chain with a known stationary distribution.
 If this was the case then we could generate a large number of samples from our Markov Chain and the stationary distribution of these samples will be samples from our distribution of interest.
 This is the main premise behind Markov Chain Monte Carlo, where we use a Monte Carlo approach to alter a simpler Markov Chain into one with a known stationary distribution.
