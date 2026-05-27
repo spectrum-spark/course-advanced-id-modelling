@@ -95,28 +95,6 @@ This is a coincidence as [Ordinary Least Squares](https://en.wikipedia.org/wiki/
 
 :::
 
-::: {.callout-note title="Poisson Regression" collapse="true"}
-Assuming that the data generation process is normally distributed is not enough to describe all physical phenomenon (no matter how badly you understand the Central Limit Theorem).
-As such, you might collect data, $Y$,  and propose a Poisson model,
-$$
-Y \sim \text{Poisson}(\mu)
-$$
-where $\mu$ is the mean of the distributed.
-In such a situation, using maximum likelihood is still valid and our likelihood would be,
-$$
-\mathcal{L}(\mu) = \prod_{i=1}^N \frac{\mu^{y_i} e^{-\mu}}{y_i!} = \frac{\mu^{\sum_{i=1}^N y_i} e^{-N\mu}}{\prod_{i=1}^N y_i!}.
-$$
-By following the exact same procedure as before, we find the stationary points by solving
-$$
-\left.\left.\frac{d}{d\mu}\right(\log\mathcal{L}(\mu)\right) = (\sum_{i=1}^N y_i)\frac{1}{\mu} -N = 0.
-$$
-Therefore,
-$$
-\hat{\mu} = \frac{1}{N}\sum_{i=1}^N y_i,
-$$
-where $\hat{\mu}$ has been used to denote the maximum likelihood estimate.
-:::
-
 In the examples provided we derived an exact form for the maximum likelihood estimate of our parameters.
 It is not always the case that we can obtain the maximum of our likelihood function using pen and paper.
 Therefore, we often use numerical techniques to approximate our solution.
@@ -136,7 +114,7 @@ For this course, we will use the `optim` function in R (but you can use any tech
 1) Assume that you have measured $N$ data points, $D_i$, that are independent and Poisson distributed. 
   - What is the likelihood of observing your data?
   - Derive the formula for the maximum likelihood
-  - What other distributions can be used to model count data?
+  - What other distributions can be used to model count data and what are their benefits over the Poisson distribution?
 2) The time an individual spends infectious is often modelled as an exponential distribution where
 $$
 p(x|\lambda) = \lambda \exp(-\lambda x)
@@ -146,3 +124,59 @@ where $\lambda$ is the rate parameter.
   - What is the likelihood of observing your collected data?
   - What assumptions have you made to express your likelihood?
   - Derive the formula for the maximum likelihood estimate of $\lambda$. 
+  - Can you use these estimates within another model? 
+  If so, what assumptions are required about the parameters.
+  - What other distributions could be considered as a model for the time an individual is infectious?
+
+
+::: {.callout-note title="Poisson Regression" collapse="true" .hidden}
+## Answers 
+1) 
+
+Assuming that the data generation process is normally distributed is not enough to describe all physical phenomenon (no matter how badly you understand the Central Limit Theorem).
+As such, you might collect data, $Y$,  and propose a Poisson model,
+$$
+Y \sim \text{Poisson}(\mu)
+$$
+where $\mu$ is the mean of the distributed.
+In such a situation, using maximum likelihood is still valid and our likelihood would be,
+$$
+\mathcal{L}(\mu) = \prod_{i=1}^N \frac{\mu^{y_i} e^{-\mu}}{y_i!} = \frac{\mu^{\sum_{i=1}^N y_i} e^{-N\mu}}{\prod_{i=1}^N y_i!}.
+$$
+By following the exact same procedure as before, we find the stationary points by solving
+$$
+\left.\left.\frac{d}{d\mu}\right(\log\mathcal{L}(\mu)\right) = (\sum_{i=1}^N y_i)\frac{1}{\mu} -N = 0.
+$$
+Therefore,
+$$
+\hat{\mu} = \frac{1}{N}\sum_{i=1}^N y_i,
+$$
+where $\hat{\mu}$ has been used to denote the maximum likelihood estimate.
+
+  - Other distributions to model count data include the negative binomial distribution - it will allow you to handle overdispersion which is important in epi. 
+  Some people might mention zero inflated poisson - accounts for extra zeros in the data. 
+
+2)
+The likelihood is, 
+$$
+\mathcal{L}(\mu) = \prod_{i=1}^N \lambda \exp(-\lambda D_i)
+$$
+which implies,
+$$
+\mathcal{L}(\mu) = N \log\lambda  - \lambda \sum_{i}^{N} D_i
+$$
+which is maximised when 
+$$
+0= \frac{N}{\lambda} - \sum_{i}^{N} D_i.
+$$
+
+These estimates can be used within other models - for example individual based models or as a rate parameter in a differential equation model. 
+If we were to try and fit further parameters using this estimate in a different model, we would have to be certain that the parameters are independent. 
+If they are not we will be ignoring important correlations. 
+
+Other distributions that could be considered are the Erlang and Gamma distributions.
+These are generalisations of the exponential distribution. 
+There is also evidence that the log-normal distribution provides a suitable fit for the time an individual is infectious. 
+A normal distribution would not be suitable because its support is in $(-\infty,\infty)$.
+If you have a lot of data, an empirical approximation could be considered depending upon the amount of data collected and your required questions.  
+:::
