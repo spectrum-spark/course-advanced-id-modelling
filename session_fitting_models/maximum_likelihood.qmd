@@ -133,4 +133,16 @@ A short list of techniques that find maximums (or equivalently minimums) are:
 For this course, we will use the `optim` function in R (but you can use any technique you desire if simpler).
 
 ## Exercises
-1) 
+1) Assume that you have measured $N$ data points, $D_i$, that are independent and Poisson distributed. 
+  - What is the likelihood of observing your data?
+  - Derive the formula for the maximum likelihood
+  - What other distributions can be used to model count data?
+2) The time an individual spends infectious is often modelled as an exponential distribution where
+$$
+p(x|\lambda) = \lambda \exp(-\lambda x)
+$$
+where $\lambda$ is the rate parameter. 
+  - What data could you collect to infer the value of $\lambda$?
+  - What is the likelihood of observing your collected data?
+  - What assumptions have you made to express your likelihood?
+  - Derive the formula for the maximum likelihood estimate of $\lambda$. 
