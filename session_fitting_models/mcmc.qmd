@@ -355,7 +355,7 @@ All of these samplers are creating markov chains so they follow the same general
    
 2) Implement markov chain monte carlo to sample from a Student's $t$-distribution where, 
 $$
-f(t) = \frac{\gamma(\frac{\nu+1}{2})}{\sqrt{\pi \nu \gamma(\frac{\nu}{2})}}\left(1 + \frac{t^2}{\nu}\right)^{-(\nu +1)/2},
+\pi(t) = \frac{\gamma(\frac{\nu+1}{2})}{\sqrt{\pi \nu \gamma(\frac{\nu}{2})}}\left(1 + \frac{t^2}{\nu}\right)^{-(\nu +1)/2},
 $$
 where $\nu$ = 3.
     - Show that the expected value of the distribution is zero
@@ -382,14 +382,13 @@ is the probability density function of the normal distribution.
     - Are there any problems? 
     Why do you think they occurred?  
 
-
+:::{.hidden}
 ```{r echo=T, filename="student_t_sampler.r"}
 number_samples <- 10000
 initial_samples <- c(1.0, 5.0, -10.0, 40.0)
 nu = 3
 
 log_distribution = function(x) dt(x,nu,log=TRUE)
-
 transition_kernel <- function(current) {
     proposed <- current + rnorm(1, 0, 1)
     log_acceptance_criteria <- log_distribution(proposed) +
@@ -423,6 +422,9 @@ mcmc_chains |>
     ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Sample)) +
     ggplot2::geom_point() +
     ggplot2::facet_wrap(~Chain)
+
+mcmc_chains |> dplyr::filter(Iteration > 1000) |> 
+    dplyr::slice(which(Iteration %% 200 == 0)) |> dplyr::summarise( .by = tidyselect::all_of("Chain"), Var = var(Sample))
 
 mcmc_chains |>
     dplyr::filter(Iteration > 250) |>
@@ -472,6 +474,8 @@ mcmc_chains <- purrr::map(
 ) |>
     dplyr::bind_rows(.id = "Chain")
 
+
+
 mcmc_chains |>
     ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Sample)) +
     ggplot2::geom_point() +
@@ -484,3 +488,4 @@ mcmc_chains |>
         bins = 50
     ) 
 ```
+:::

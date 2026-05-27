@@ -129,3 +129,8 @@ A short list of techniques that find maximums (or equivalently minimums) are:
 - Newton-Rhapson
 - Nelder-Mead
 - Run every possible combination of parameters and check which is the largest or smallest (only suitable if the dimension of the parameter space is reasonable, but I have done this more often than you expect).
+
+For this course, we will use the `optim` function in R (but you can use any technique you desire if simpler).
+
+## Exercises
+1) 
