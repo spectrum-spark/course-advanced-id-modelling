@@ -1,7 +1,11 @@
 ---
-title: "Bayesian Inference"
+title: SPARKLE Training Course
+subtitle: Fitting Models - Bayesian Inference
+format:
+  training-html: default
+presenter: "Dr Eamon Conway"
+contributors: [Dr Eamon Conway]
 ---
-
 Bayesian inference is an alternative to inferring model fits from data.
 With maximum likelihood we have worked off the assumption that there is a true known value for the parameters and that the data varies.
 That is, we are interested with $p(D|\theta$).
@@ -170,8 +174,13 @@ which is maximised at,
 $$
 \hat{\theta} = {\frac {1 + \alpha}{6 + \alpha +\beta}},
 $$
-for $\alpha>0$ and $\beta >0$. This would be our maximum posterior estimate once we decide on the value of our hyperparameters.
+for $\alpha>0$, $\beta >0$ and $\hat{\theta}$ is the estimate. This would be our maximum posterior estimate once we decide on the value of our hyperparameters.
+
+The expected value of the posterior is another Bayes' Estimator. 
+For the example above the 
+
+<!-- 
 
 An alternative, yet equally valid parameterisation, is to use log-odds ratio instead of probability in the binomial distribution.
-By taking our posterior and defining the transformation $\phi = \log \theta - \log(1-\theta)$, our posterior can be expressed as,
+By taking our posterior and defining the transformation $\phi = \log \theta - \log(1-\theta)$, our posterior can be expressed as, -->
 

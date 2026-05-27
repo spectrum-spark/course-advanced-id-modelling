@@ -1,6 +1,6 @@
 ---
 title: SPARKLE Training Course
-subtitle: Fitting Models
+subtitle: Fitting Models - Part 1
 format:
   training-html: default
 presenter: "Dr Eamon Conway"
@@ -8,8 +8,12 @@ contributors: [Dr Eamon Conway]
 ---
 **Session overview and timing (3 hours total)**
 
-This session focuses on fitting models, building directly on the models used in previous chapters.
-The session is structured in three parts of roughly 60 minutes each:
+This session focuses on introducing the neccesary concepts to start fitting mathematical models to data!.
+The session first introduces the differences between Frequentist and Bayesian statistics. 
+This will help your understanding when reading relevant literature about model approaches. 
+We then introduce the concept of maximum likelihood methods, fitting simple models to observed data by maximising probabilities. 
+Bayesian inference is then introduced, with a specific focus on the use of Markov Chain Monte Carlo methods to sample from the posterior distribution. 
+
 
 ## Introduction
 
@@ -184,15 +188,18 @@ ggplot2::ggplot(plot_data,ggplot2::aes(x = Mean, fill = Distribution)) +
 ```
 
 ## Model fitting
-[Maximum Likelihood](maximum_likelihood.qmd)
 
+[Maximum Likelihood](maximum_likelihood.qmd)
 [Bayesian Inference](bayesian_inference.qmd)
 
-<!-- ### But that seemed easy? Isn't Bayesian statistics hard and full of sampling?
-Yeah, I hid all of the complicated nonsense hidden with a wonderful $\propto$ sign.
-In doing so, I hid all of the complicated integrals and all the complicated nonsense. 
+## Real applications 
 
-So what do Bayesian people do?
-When it comes to evaluating their problem at the end of the day, they normally construct samplers that generate samples from their posterior distribution. 
-Why do they use samplers? 
-When evaluating high dimensional integrals (which that constant normally is) the monte carlo method provides wonderful convergence properties! -->
+In my opinion, the hardest part of infectious disease modelling is model fitting. 
+It involves knowledge of data, mathematical modelling, statistics, and computing to make that the correct answer is obtained.
+This is an interdisciplinary pursuit and its important to make sure that your results are reliable. 
+This introduces the super important topic of reproducibility. 
+
+### Reproducibility
+
+
+### Model fitting heterogeneities
