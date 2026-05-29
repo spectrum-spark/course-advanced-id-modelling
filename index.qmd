@@ -9,9 +9,14 @@ This course builds on introductory infectious disease modelling concepts and giv
 ## Sessions
 
 1. [Recap of infectious disease modelling concepts](session_intro_id_modelling/session_intro_id_modelling.qmd)
-2. [Fitting models](session_fitting_models/fitting_models.qmd)
-3. [Introduction to spatial models](session_spatial_models/session_spatial_models.qmd)
+2. [Adding age structure to SIR models](session_age_structured_models/session_age_structured_models.qmd)
+3. [Fitting models](session_fitting_models/fitting_models.qmd)
+4. [Introduction to spatial models](session_spatial_models/session_spatial_models.qmd)
 
 ## Session 1: Recap of infectious disease modelling concepts
 
 This first session refreshes compartmental modelling, reproduction numbers, and likelihoods. It includes hands-on activities translating between diagrams and equations, explaining model terms in words, interpreting effective reproduction number trajectories, and refitting a simpler model to simulated outbreak data.
+
+## Session 2: Adding age structure to SIR models
+
+This session extends a basic SIR model to include age groups, age-specific susceptibility and infectiousness, and age-specific contact matrices. It keeps the theory light and uses guided coding activities so students can practise changing model assumptions and interpreting the resulting epidemic dynamics.
