@@ -33,12 +33,18 @@ jobs:
             gdal-bin \
             libgdal-dev \
             libgeos-dev \
+            libglpk-dev \
             libproj-dev \
             libsqlite3-dev \
             libtbb-dev \
             libudunits2-dev \
+            libxml2-dev \
             proj-bin \
-            proj-data
+            proj-data \
+            libabsl-dev \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            pandoc
 
       - name: Restore R packages
         uses: r-lib/actions/setup-renv@v2
