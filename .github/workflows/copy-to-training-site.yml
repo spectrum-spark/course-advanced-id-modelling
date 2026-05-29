@@ -1,0 +1,38 @@
+name: Copy to training site
+
+on:
+  workflow_dispatch:   # run manually
+  push:
+    branches:
+      - main           # or whichever branch triggers it
+
+jobs:
+  copy-directory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          path: source
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: spectrum-spark/courses 
+          path: target-repo
+          token: ${{ secrets.PERSONAL_TOKEN }}       # Personal Access Token with repo write perms
+
+      - name: Copy files
+        run: |
+          mkdir -p target-repo/courses/intro-mathematical-modelling
+          rsync -av --delete source/student_materials/ target-repo/courses/intro-mathematical-modelling
+
+      - name: Commit & push changes
+        working-directory: target-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Sync directory from source repo" || echo "No changes to commit"
+          git push
