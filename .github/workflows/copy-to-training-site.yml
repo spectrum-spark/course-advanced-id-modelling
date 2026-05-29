@@ -1,14 +1,15 @@
 name: Copy to training site
 
 on:
-  workflow_dispatch:   # run manually
+  workflow_dispatch:
   push:
     branches:
-      - main           # or whichever branch triggers it
+      - main
 
 jobs:
   copy-directory:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v4
@@ -16,17 +17,30 @@ jobs:
           repository: ${{ github.repository }}
           path: source
 
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Restore R packages
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Render site
+        working-directory: source
+        run: quarto render
+
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
-          repository: spectrum-spark/courses 
+          repository: spectrum-spark/courses
           path: target-repo
-          token: ${{ secrets.PERSONAL_TOKEN }}       # Personal Access Token with repo write perms
+          token: ${{ secrets.PERSONAL_TOKEN }}
 
-      - name: Copy files
+      - name: Copy rendered site
         run: |
-          mkdir -p target-repo/courses/intro-mathematical-modelling
-          rsync -av --delete source/student_materials/ target-repo/courses/intro-mathematical-modelling
+          mkdir -p target-repo/courses/modelling-heterogeneities
+          rsync -av --delete source/_site/ target-repo/courses/modelling-heterogeneities/
 
       - name: Commit & push changes
         working-directory: target-repo
@@ -34,5 +48,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Sync directory from source repo" || echo "No changes to commit"
+          git commit -m "Sync rendered course site" || echo "No changes to commit"
           git push
