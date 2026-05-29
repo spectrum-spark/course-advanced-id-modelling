@@ -8,7 +8,7 @@ on:
 
 jobs:
   copy-directory:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout source repo
@@ -25,6 +25,20 @@ jobs:
         with:
           r-version: renv
           working-directory: source
+
+      - name: Install spatial system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gdal-bin \
+            libgdal-dev \
+            libgeos-dev \
+            libproj-dev \
+            libsqlite3-dev \
+            libtbb-dev \
+            libudunits2-dev \
+            proj-bin \
+            proj-data
 
       - name: Restore R packages
         uses: r-lib/actions/setup-renv@v2
