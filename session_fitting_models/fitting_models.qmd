@@ -193,7 +193,7 @@ The first is the maximum likelihood method, which is a frequentist approach.
 The second is the application of Bayesian inference. 
 
 [Maximum Likelihood](maximum_likelihood.qmd)
-[Bayesian Inference](bayesian_inference.qmd)
+[Bayesian Inference](bayesianinference.qmd)
 
 ## Real applications 
 
