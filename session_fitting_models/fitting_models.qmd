@@ -14,7 +14,6 @@ This will help your understanding when reading relevant literature about model a
 We then introduce the concept of maximum likelihood methods, fitting simple models to observed data by maximising probabilities. 
 Bayesian inference is then introduced, with a specific focus on the use of Markov Chain Monte Carlo methods to sample from the posterior distribution. 
 
-
 ## Introduction
 
 Determining what model should be used for your problem is only step one in modelling infectious diseases. 
@@ -187,7 +186,11 @@ ggplot2::ggplot(plot_data,ggplot2::aes(x = Mean, fill = Distribution)) +
     ggplot2::theme_minimal(base_size = 10)
 ```
 
-## Model fitting
+## Model fitting 
+
+We will now look at two approaches to model fitting (inference).
+The first is the maximum likelihood method, which is a frequentist approach. 
+The second is the application of Bayesian inference. 
 
 [Maximum Likelihood](maximum_likelihood.qmd)
 [Bayesian Inference](bayesian_inference.qmd)
