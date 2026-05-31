@@ -2,7 +2,7 @@
 title: SPARKLE Training Course
 subtitle: Fitting Models - Part 1
 format:
-training-html: default
+    training-html: default
 presenter: "Dr Eamon Conway"
 contributors: [Dr Eamon Conway]
 ---
