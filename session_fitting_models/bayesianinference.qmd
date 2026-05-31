@@ -6,6 +6,8 @@ format:
 presenter: "Dr Eamon Conway"
 contributors: [Dr Eamon Conway]
 ---
+
+## Bayesian inference
 Bayesian inference is an alternative to inferring model fits from data.
 With maximum likelihood we have worked off the assumption that there is a true known value for the parameters and that the data varies.
 That is, we are interested with $p(D|\theta$).
@@ -14,9 +16,11 @@ This is a subtle yet important point that has led to constant confusion and argu
 The two points of view are also related through Bayes' Theorem.
 
 ::: {.callout title="Bayes' Theorem"}
+In Bayesian inference, we use Bayes Theorem, 
 $$
-p(A|B) = \frac{p(A, B)}{p(B)}
+p(\theta|D) = \frac{p(D|\theta) p(\theta)}{p(D)},
 $$
+to convert our knowledge of how the data, $D$, was generated given the known parameters, $\theta$, into what our data says about the parameters, $p(\theta|D)$.
 :::
 
 <!-- ::: {.callout-note title="Normal data example" collapse="true"}
@@ -45,35 +49,20 @@ $$
 $$
 ::: -->
 
-::: {.callout-note title="Linear Regression" collapse="true"}
+::: {.callout-note title="Linear Regression" collapse="false"}
 Lets do linear regression in a Bayesian sense. 
-We will have 20 samples of data that looks like,
-$$
-D_i \sim \mathcal{N}(\mu = ax_1 + bx_2 + c, 1),
-$$
-where $x_i$ are measured covariates and $a$, $b$, and $c$ are parameters to be inferred.
-Therefore we have a likelihood of,
-$$
-p(D|a,b,c) = \prod_{i=1}^{20} \mathcal{N}(D_i|ax_1 + bx_2 + c,1)
-$$
+Assume that we have measured the following data.
 
-As a first example, I am going to assume an uninformative prior,
-$$
-p(a,b,c) \propto 1
-$$
-You might notice this is not a distribution, which is okay. 
-You can set whatever prior you want - as long as the posterior is proper (this is tough). 
-
-This code generates our data. 
 ```{r echo=FALSE}
-data = (function(){
-    N_samples = 20
-    X1 = rnorm(N_samples, mean = 3, sd = 3)
-    X2 = rnorm(N_samples, mean = 10, sd = 4)
-    return(tibble::tibble(X1 = X1,
-                          X2 = X2,
-                          Y = rnorm(N_samples, mean = 2*X1 + 5, sd = 1))
-    )
+data <- (function() {
+    N_samples <- 20
+    X1 <- rnorm(N_samples, mean = 3, sd = 3)
+    X2 <- rnorm(N_samples, mean = 10, sd = 4)
+    return(tibble::tibble(
+        X1 = X1,
+        X2 = X2,
+        Y = rnorm(N_samples, mean = 2 * X1 + 5, sd = 1)
+    ))
 })()
 
 data |>
@@ -81,49 +70,87 @@ data |>
     ggplot2::ggplot(ggplot2::aes(x = Measured, y = Y)) +
     ggplot2::geom_point() +
     ggplot2::facet_wrap(~Variable, scale = "free")
-
 ```
+
+This is 20 observed sampes, and I am going to assume that it is from a model such that, 
+$$
+D_i \sim \mathcal{N}(\mu = ax_1 + bx_2 + c, 1),
+$$
+where $x_i$ are measured covariates and $a$, $b$, and $c$ are parameters to be inferred.
+Therefore we have a likelihood of,
+$$
+p(D|a,b,c) = \prod_{i=1}^{20} \mathcal{N}(D_i|ax_1 + bx_2 + c,1).
+$$
+If we were to look at a maximum likelihood approach we would now just determine the best parameters of $a$, $b$, and $c$. 
+However, as we are doing Bayesian inference we want,
+$$
+p(a,b,c|D) \propto p(D|a,b,c)p(a,b,c),
+$$
+so we must first define what our prior for $p(a,b,c)$ is. 
+
+For our purposes I am going to assume an uninformative prior,
+$$
+p(a,b,c) \propto 1
+$$
+You might notice this is not a distribution, which is okay, as long as the posterior is a distribution. 
+When a prior is not a distribution we call it improper.
+
+We are now in a position to infer our parameters, as we can state that our posterior is,
+$$
+p(a,b,c|D) \propto \prod_{i=1}^{20} \mathcal{N}(D_i|ax_1 + bx_2 + c,1).
+$$
+If the mathematics is not too complicated we may be able to determine the constant of proportionality, but this is often hard.
+However, we have just learnt that there is a sampling technique that allows us to create a Markov chain with stationary distribution equal to our distribution of interest.
 
 This is a Markov Chain Monte Carlo that constructs a sampling distribution that is the posterior distribution.
 ```{r echo=TRUE, filename="linear_regression.r"}
-initial_samples = list(c(a = 1, b = 1, c = 0),
-                       c(a = 10, b = 10, c = 10),
-                       c(a = 5, b = 4, c = 1),
-                       c(a = -1, b = -2, c = -3))
-number_samples = 4000
-proposal_sd = 2^-3
+initial_samples <- list(
+    c(a = 1, b = 1, c = 0),
+    c(a = 10, b = 10, c = 10),
+    c(a = 5, b = 4, c = 1),
+    c(a = -1, b = -2, c = -3)
+)
+number_samples <- 4000
+proposal_sd <- 2^-3
 
-log_posterior <- function(x){
-    a = x[1]
-    b = x[2]
-    c = x[3]
-    mu = a*data$X1 + b*data$X2 + c
+log_posterior <- function(x) {
+    a <- x[1]
+    b <- x[2]
+    c <- x[3]
+    mu <- a * data$X1 + b * data$X2 + c
     return(sum(dnorm(x = data$Y, mean = mu, sd = 1, log = TRUE)))
 }
 
-transition_kernel <- function(current){
-    proposed = current + rnorm(3, 0, proposal_sd)
-    log_acceptance_criteria = log_posterior(proposed) + sum(dnorm(current, proposed, proposal_sd, log=TRUE)) - log_posterior(current) - sum(dnorm(proposed, current, proposal_sd, log=TRUE))
-    if(log(runif(1, 0, 1)) > log_acceptance_criteria){
-        proposed = current
+transition_kernel <- function(current) {
+    proposed <- current + rnorm(3, 0, proposal_sd)
+    log_acceptance_criteria <- log_posterior(proposed) +
+        sum(dnorm(current, proposed, proposal_sd, log = TRUE)) -
+        log_posterior(current) -
+        sum(dnorm(proposed, current, proposal_sd, log = TRUE))
+    if (log(runif(1, 0, 1)) > log_acceptance_criteria) {
+        proposed <- current
     }
     return(proposed)
 }
 
-generate_mcmc_chain <- function(initial_sample){
+generate_mcmc_chain <- function(initial_sample) {
     return(
-           purrr::accumulate(.x = 1:number_samples,
-                             .f = ~ transition_kernel(.x),
-                             .init = initial_sample)
+        purrr::accumulate(
+            .x = 1:number_samples,
+            .f = ~ transition_kernel(.x),
+            .init = initial_sample
+        )
     )
 }
 
-mcmc_chains = purrr::map(.x = initial_samples,
-                         .f = ~ tibble::tibble(Sample = generate_mcmc_chain(.x)) |>
-                             dplyr::mutate(Iteration = dplyr::row_number())) |>
-                dplyr::bind_rows(.id = "Chain") |>
-                tidyr::unnest_wider(Sample) |>
-                tidyr::pivot_longer(cols = c("a", "b", "c"), values_to = "Sample", names_to = "Variable")
+mcmc_chains <- purrr::map(
+    .x = initial_samples,
+    .f = ~ tibble::tibble(Sample = generate_mcmc_chain(.x)) |>
+        dplyr::mutate(Iteration = dplyr::row_number())
+) |>
+    dplyr::bind_rows(.id = "Chain") |>
+    tidyr::unnest_wider(Sample) |>
+    tidyr::pivot_longer(cols = c("a", "b", "c"), values_to = "Sample", names_to = "Variable")
 
 
 mcmc_chains |>
@@ -131,29 +158,22 @@ mcmc_chains |>
     ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Sample, color = Chain)) +
     ggplot2::geom_point() +
     ggplot2::facet_wrap(~Variable)
-
-mcmc_chains |>
-    dplyr::group_by(Variable, Chain) |>
-    dplyr::arrange(Iteration, .by_group = TRUE) |>
-    dplyr::mutate(Mean = slider::slide_dbl(Sample, mean, .before=499)) |>
-    ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Mean, color = Chain)) +
-    ggplot2::geom_point() +
-    ggplot2::facet_wrap(~Variable)
-
 ```
 :::
 
-### Conjugate Priors
-Numerical methods for sampling from complicated distributions are a relatively modern advancement.
-Therefore, Bayesian's typically focused on trying to get closed-form solutions to posterior distributions.
-This was done through the use of Conjugate Priors.
-
-Their use today is still important, as conjugate priors can be placed on certain parameters to improve computational efficiency.
-
 ### Bayes' Estimators
 When we were investigating maximum likelihood, we obtained a point estimate for the parameters.
-In a similar fashion we can obtain point estimates of parameters in Bayesian Inference.
-These estimates minimise a loss function.
+In a similar fashion we can obtain point estimates of parameters in Bayesian Inference (these estimators minimise a loss function, see [Bayes' Estimators](https://en.wikipedia.org/wiki/Bayes_estimator)). 
+
+```{r echo=TRUE, filename="sliding_mean_chains.r"}
+mcmc_chains |>
+    dplyr::group_by(Variable, Chain) |>
+    dplyr::arrange(Iteration, .by_group = TRUE) |>
+    dplyr::mutate(Mean = slider::slide_dbl(Sample, mean, .before = 499)) |>
+    ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Mean, color = Chain)) +
+    ggplot2::geom_point() +
+    ggplot2::facet_wrap(~Variable)
+```
 
 The maximum posterior estimate, whilst being an arguably obvious choice, is not always a Bayes' estimator.
 Does this mean you should not use the maximum posterior as a point estimate?
@@ -178,6 +198,13 @@ for $\alpha>0$, $\beta >0$ and $\hat{\theta}$ is the estimate. This would be our
 
 The expected value of the posterior is another Bayes' Estimator. 
 For the example above the 
+
+## Futher reading
+This topic barely touches on the approaches used in Bayesian inference. 
+What is important to remember is that all of Bayesian inference is based around the posterior.
+All of the methods you will find in the literature attempt to sample more efficiently from the posterior (for example Hamiltonian Monte Carlo), accurately approximate the posterior (for example INLA), or are methods to determine the best point estimate from the posterior. 
+There are also approaches, such as using [conjugate priors](https://en.wikipedia.org/wiki/Conjugate_prior), which result in known posterior distributions.
+
 
 <!-- 
 
