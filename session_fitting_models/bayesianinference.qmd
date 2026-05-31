@@ -137,8 +137,9 @@ We can use the samples to from the MCMC algorithm to estimate the shape of our p
 ```{r echo=TRUE, filename="plot_samples.R"}
 mcmc_chains |>
     dplyr::filter(Iteration > 1000) |>
-  ggplot2::ggplot(ggplot2::aes(x = Sample, color = Chain)) + 
-  ggplot2::geom_histogram(ggplot2::density(),bins = 30)
+    ggplot2::ggplot(ggplot2::aes(x = Sample, fill = Chain)) + 
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), bins = 50, alpha = 0.5,position = "identity") + 
+    ggplot2::facet_wrap(~Variable, scales = "free")
 ```
 An alternative to plotting samples from the posterior is to obtain a point estimate (these estimators minimise a loss function, see [Bayes' Estimators](https://en.wikipedia.org/wiki/Bayes_estimator)). 
 When we were investigating maximum likelihood, we obtained a point estimate that was the maximum probability.
@@ -147,6 +148,7 @@ An alternative that I will demonstrate here is the mean of the posterior distrib
 
 ```{r echo=TRUE, filename="sliding_mean_chains.r"}
 mcmc_chains |>
+    dplyr::filter(Iteration > 1000) |>
     dplyr::group_by(Variable, Chain) |>
     dplyr::arrange(Iteration, .by_group = TRUE) |>
     dplyr::mutate(Mean = slider::slide_dbl(Sample, mean, .before = 499)) |>
@@ -156,19 +158,92 @@ mcmc_chains |>
 ```
 The above figure demonstrates that as we obtain more samples from the posterior distribution that the expected value of our distribution stabilises.
 
-## Exercises
-1) 
-
-
 ## Futher reading
 This topic barely touches on the approaches used in Bayesian inference. 
 What is important to remember is that all of Bayesian inference is based around the posterior.
 All of the methods you will find in the literature attempt to sample more efficiently from the posterior (for example Hamiltonian Monte Carlo), accurately approximate the posterior (for example INLA), or are methods to determine the best point estimate from the posterior. 
 There are also approaches, such as using [conjugate priors](https://en.wikipedia.org/wiki/Conjugate_prior), which result in known posterior distributions.
 
+## Exercises
+1) The choice of prior is important in Bayesian inference.
+    - What methods do you think can be used to choose a prior?
+    - What choices in the prior could be considered "bad"?
+2) R has an in-built data set `warpbreaks`. 
+We are going to model the mean number of failures in this data as a Poisson distribution with a Gamma distribution prior. 
+    - What is the likelihood?
+    - What is probability density function of the prior?
+    - What is the resulting posterior?
+    - Implement an MCMC algorithm that samples from the posterior distribution and plot the outcome(HINT: Use $x = log(\lambda))$ as a way to remove the bound on your sampling parameter).
+    - Plot the prior distribution over the posterior distribution.
+    - Make the prior informative (reduce the variance of your prior distribution). 
+    What happens to the resulting distribution?
 
-<!-- 
+    - This prior is known as the conjugate prior for the Poisson distribution. 
+    What does that mean and does it have any important properties?
 
-An alternative, yet equally valid parameterisation, is to use log-odds ratio instead of probability in the binomial distribution.
-By taking our posterior and defining the transformation $\phi = \log \theta - \log(1-\theta)$, our posterior can be expressed as, -->
+```{r echo=TRUE, filename="poisson_regression.r"}
+data <- warpbreaks
+initial_samples <- list(
+    c(x = 1),
+    c(x = 0.5),
+    c(x = -4),
+    c(x = -1)
+)
+number_samples <- 4000
+proposal_sd <- 2^-3
 
+# Prior parameters
+shape <- 5
+scale <- 4
+
+log_likelihood <- function(x) {
+    return(sum(dpois(x = data$breaks, exp(x), log = TRUE)))
+}
+log_prior <- function(x) {
+    return(dgamma(x = exp(x), shape = shape, scale = scale))
+}
+log_posterior <- function(x) {
+    return(log_likelihood(x) + log_prior(x))
+}
+
+transition_kernel <- function(current) {
+    proposed <- current + rnorm(1, 0, proposal_sd)
+    log_acceptance_criteria <- log_posterior(proposed) +
+        sum(dnorm(current, proposed, proposal_sd, log = TRUE)) -
+        log_posterior(current) -
+        sum(dnorm(proposed, current, proposal_sd, log = TRUE))
+    if (log(runif(1, 0, 1)) > log_acceptance_criteria) {
+        proposed <- current
+    }
+    return(proposed)
+}
+
+generate_mcmc_chain <- function(initial_sample) {
+    return(
+        purrr::accumulate(
+            .x = 1:number_samples,
+            .f = ~ transition_kernel(.x),
+            .init = initial_sample
+        )
+    )
+}
+
+mcmc_chains <- purrr::map(
+    .x = initial_samples,
+    .f = ~ tibble::tibble(Sample = generate_mcmc_chain(.x)) |>
+        dplyr::mutate(Iteration = dplyr::row_number())
+) |>
+    dplyr::bind_rows(.id = "Chain")
+
+
+mcmc_chains |>
+    ggplot2::ggplot(ggplot2::aes(x = Iteration, y = exp(Sample), color = Chain)) +
+    ggplot2::geom_point()
+
+mcmc_chains |>
+    dplyr::filter(Iteration > 1000) |>
+    ggplot2::ggplot(ggplot2::aes(x = exp(Sample), fill = Chain)) +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), bins = 50, alpha = 0.5, position = "identity") +
+    ggplot2::stat_function(fun = dgamma, args = list(shape = shape, scale = scale)) +
+    ggplot2::scale_x_continuous(limits = c(0, 35))
+```
