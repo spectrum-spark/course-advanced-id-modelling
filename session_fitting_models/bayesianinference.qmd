@@ -23,33 +23,7 @@ $$
 to convert our knowledge of how the data, $D$, was generated given the known parameters, $\theta$, into what our data says about the parameters, $p(\theta|D)$.
 :::
 
-<!-- ::: {.callout-note title="Normal data example" collapse="true"}
-For a simple example, lets assume
-$$
-D \sim \mathcal{N}(\mu, \sigma^2),
-$$
-where $\mu$ is the mean, and $\sigma^2$ is the variance of the sample.
-
-From the measured data we are trying to infer $\mu$ but we know $\sigma^2$.
-The likelihood for this example would be,
-$$
-p(D|\mu) = \prod_{i=1}^N \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(D_i - \mu)^2}{2\sigma^2}} = \left(\frac{1}{\sigma \sqrt{2 \pi}}\right)^N e^{-\frac{1}{2\sigma^2}\sum_{i=1}^N (D_i - \mu)^2},
-$$
-where $D_i$ is the $i$th data point. Therefore we have that the log-likelihood is,
-$$
-\log \mathcal{L}(\mu) = -N(\log\sigma + \log\sqrt{2\pi}) + {-\frac{1}{2\sigma^2}\sum_{i=1}^N (D_i - \mu)^2},
-$$
-which has stationary points at,
-$$
-\frac{d}{d \mu}\left\{ \log \mathcal{L}(\mu)\right\} =  {-\frac{1}{2\sigma^2}\sum_{i=1}^N (D_i - \mu)^2} = 0.
-$$
-The solution of which is the maximum likelihood estimate for the mean,
-$$
-\hat{\mu} = \frac{1}{N}\sum_{i=1}^N D_i
-$$
-::: -->
-
-::: {.callout-note title="Linear Regression" collapse="false"}
+### A simple example
 Lets do linear regression in a Bayesian sense. 
 Assume that we have measured the following data.
 
@@ -159,11 +133,17 @@ mcmc_chains |>
     ggplot2::geom_point() +
     ggplot2::facet_wrap(~Variable)
 ```
-:::
-
-### Bayes' Estimators
-When we were investigating maximum likelihood, we obtained a point estimate for the parameters.
-In a similar fashion we can obtain point estimates of parameters in Bayesian Inference (these estimators minimise a loss function, see [Bayes' Estimators](https://en.wikipedia.org/wiki/Bayes_estimator)). 
+We can use the samples to from the MCMC algorithm to estimate the shape of our posterior. 
+```{r echo=TRUE, filename="plot_samples.R"}
+mcmc_chains |>
+    dplyr::filter(Iteration > 1000) |>
+  ggplot2::ggplot(ggplot2::aes(x = Sample, color = Chain)) + 
+  ggplot2::geom_histogram(ggplot2::density(),bins = 30)
+```
+An alternative to plotting samples from the posterior is to obtain a point estimate (these estimators minimise a loss function, see [Bayes' Estimators](https://en.wikipedia.org/wiki/Bayes_estimator)). 
+When we were investigating maximum likelihood, we obtained a point estimate that was the maximum probability.
+We can do the same and determine the maximum of the posterior. 
+An alternative that I will demonstrate here is the mean of the posterior distribution. 
 
 ```{r echo=TRUE, filename="sliding_mean_chains.r"}
 mcmc_chains |>
@@ -174,30 +154,11 @@ mcmc_chains |>
     ggplot2::geom_point() +
     ggplot2::facet_wrap(~Variable)
 ```
+The above figure demonstrates that as we obtain more samples from the posterior distribution that the expected value of our distribution stabilises.
 
-The maximum posterior estimate, whilst being an arguably obvious choice, is not always a Bayes' estimator.
-Does this mean you should not use the maximum posterior as a point estimate?
-I am always keen for a good argument but I do not know if this one can be answered easily.
-You can view maximum posterior estimates as a maximum likelihood method with regularization, in which case they are valid but not Bayesian.
-Another criticism I would like to highlight is that the posterior distribution, in general, is not invariant undertransformation.
-Consider Binomial data such that the number of trials is 10 and the number of successes is 3.
-We have,
-$$
-p(\theta|D) \propto \theta^3(1-\theta)^7 \theta^{\alpha-1}(1-\theta)^{\beta-1},
-$$
-where we have assumed a Beta distribution prior with hyperparameters $\alpha$ and $\beta$ and $p$ is the probability of success.
-The resulting posterior (as beta distributions are conjugate to binomial distributions) is again a Beta distribution,
-$$
-p(\theta|D) \propto \theta^{2 + \alpha}(1-\theta)^{6 + \beta},
-$$
-which is maximised at,
-$$
-\hat{\theta} = {\frac {1 + \alpha}{6 + \alpha +\beta}},
-$$
-for $\alpha>0$, $\beta >0$ and $\hat{\theta}$ is the estimate. This would be our maximum posterior estimate once we decide on the value of our hyperparameters.
+## Exercises
+1) 
 
-The expected value of the posterior is another Bayes' Estimator. 
-For the example above the 
 
 ## Futher reading
 This topic barely touches on the approaches used in Bayesian inference. 
