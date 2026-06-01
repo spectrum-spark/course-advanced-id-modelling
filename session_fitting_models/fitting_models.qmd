@@ -192,17 +192,5 @@ We will now look at two approaches to model fitting (inference).
 The first is the maximum likelihood method, which is a frequentist approach. 
 The second is the application of Bayesian inference. 
 
-[Maximum Likelihood](maximum_likelihood.qmd)
-[Bayesian Inference](bayesianinference.qmd)
-
-## Real applications 
-
-In my opinion, the hardest part of infectious disease modelling is model fitting. 
-It involves knowledge of data, mathematical modelling, statistics, and computing to make that the correct answer is obtained.
-This is an interdisciplinary pursuit and its important to make sure that your results are reliable. 
-This introduces the super important topic of reproducibility. 
-
-### Reproducibility
-
-
-### Model fitting heterogeneities
+1) [Maximum Likelihood](maximum_likelihood.qmd)
+2) [Bayesian Inference](bayesianinference.qmd)
