@@ -13,11 +13,11 @@ contributors: [Dr Eamon Conway]
 
 ## Deterministic models
 
-The examples provided so far this [model fitting](model-fitting.qmd) have focused on probability distributions and determining their parameters.
+The examples provided in [Fitting Models - Part 1](../session_fitting_models/fitting_models.qmd) have focused on probability distributions and determining their parameters.
 But what if the model you have written down is not actually a probability distribution?
 What if you wrote down a system of ordinary differential equations (or partial differential equations)?
 Are there any approaches that can be used to fit these models?
-Unsurprisingly yes, and the majority of which are based on maximum likelihood or Bayesian inference.
+Unsurprisingly yes, and we can use maximum likelihood or Bayesian inference.
 
 ### Maximum likelihood for deterministic models
 
@@ -46,7 +46,7 @@ $$
 where $K$ is all constant terms.
 The maximum likelihood solution is,
 $$
-\hat{\theta} = \arg \max  - \sum_{i=1}^N (D_i - \mu(\theta))^2,
+\hat{\theta} = \max  - \sum_{i=1}^N (D_i - \mu(\theta))^2,
 $$
 which is the same solution to nonlinear least squares!
 If you are familiar with using nonlinear least squares to fit your models, then you are now also familiar with using maximum likelihood method to fit your models.
@@ -57,12 +57,64 @@ Taking the same deterministic model as before, $f: (\mathcal{M},\theta) \rightar
 
 We then make the assumption that the data observed, $D$, is generated from a distribution $Q(\cdot|\mathcal{O},\theta)$ that depends on the output space and the parameters of interest.
 
-::: {.callout-note title="SIR model"}
 
-:::
+### Fitting an SIR model
+
+It is common to work with simulated data when learning how to fit models. 
+First we use the model to obtain a random sample of data points. 
+Next we fit the model to the simulated data to see if we obtain the parameters that we put into our model. 
+This process allows us to compare our fitting algorithms to known truths and gives confidence that we will be correct when working with real data.
+
+
+```{r echo=FALSE, filename="generate_sir_data.r"}
+sir_model <- function(t, state, parameters) {
+  with(as.list(c(state, parameters)), {
+    N <- S + I + R
+    beta <- R0 * gamma
+
+    new_infections <- beta * S * I / N
+    recoveries <- gamma * I
+
+    list(c(
+      dS = -new_infections,
+      dI = new_infections - recoveries,
+      dR = recoveries
+    ))
+  })
+}
+
+sir_parameters <- c(R0 = 2.2, gamma = 1 / 5)
+sir_state <- c(S = 980, I = 20, R = 0)
+sir_times <- seq(0, 20, by = 1)
+
+sir_solution <- as.data.frame(deSolve::ode(
+  y = sir_state,
+  times = sir_times,
+  func = sir_model,
+  parms = sir_parameters
+))
+
+calculate_incidence <- function(S,I,R,parameters){
+  with(as.list(c(parameters)), {
+    N <- S + I + R
+    beta <- R0 * gamma
+    new_infections <- beta * S * I / N
+    return(rpois(n = length(new_infections), lambda = new_infections))
+  })
+}
+
+sir_incidence <- sir_solution |> 
+    dplyr::mutate(incidence = calculate_incidence(S,I,R,sir_parameters)) |> 
+    dplyr::select(time,incidence)
+
+knitr::kable(sir_incidence)
+```
+
 
 ## Age stratified SIR model
 
+1) What data should we collect for an age stratified SIR model?
+2) 
 ## Renewal models
 
 
