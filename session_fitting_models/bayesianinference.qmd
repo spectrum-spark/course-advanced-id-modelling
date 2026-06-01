@@ -168,7 +168,7 @@ There are also approaches, such as using [conjugate priors](https://en.wikipedia
 1) The choice of prior is important in Bayesian inference.
     - What methods do you think can be used to choose a prior?
     - What choices in the prior could be considered "bad"?
-2) R has an in-built data set `warpbreaks`. 
+2) R has an in-built data set `warpbreaks` (you can call it by just typing `warpbreaks`). 
 We are going to model the mean number of failures in this data as a Poisson distribution with a Gamma distribution prior. 
     - What is the likelihood?
     - What is probability density function of the prior?
