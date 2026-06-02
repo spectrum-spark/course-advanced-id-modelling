@@ -109,16 +109,37 @@ sir_incidence <- sir_solution |>
 
 knitr::kable(sir_incidence)
 ```
-
+### Multi-patch SIR model
 
 ## Age stratified SIR model
 
 1) What data should we collect for an age stratified SIR model?
 2) 
+
 ## Renewal models
+Consider an infectious disease model based on the renewal equation.
+$$
+I_t = R_t\sum_i g_i I_{t-i-1}
+$$
 
+We will assume that the daily incidence is Poisson distributed with a mean given by $I_t$. 
 
+1) What would the likelihood be?
 
+:::{.callout-note}
+$$
+p(D|\bf{I}_t) = \prod_t \frac{I_t^D_t \exp(-I_t)}{D_t!}
+$$
+
+We are taking each data point and assuming conditional independence.
+:::
+
+2) What is the unknown parameters?
+
+3) Could we set a prior? 
+
+4) Assume that $g_i = $.
+What is the maximum likelihood estimate for $R_5$?
 
 ## Pitfalls of model fitting
 
@@ -129,13 +150,10 @@ If you have a model that takes hours to run for a single parameter combination t
 
 ## Agent based models
 
+
 ## Real applications 
 
 In my opinion, the hardest part of infectious disease modelling is model fitting. 
 It involves knowledge of data, mathematical modelling, statistics, and computing to make that the correct answer is obtained.
 This is an interdisciplinary pursuit and its important to make sure that your results are reliable. 
 This introduces the super important topic of reproducibility. 
-
-
-
-### Model fitting heterogeneities
