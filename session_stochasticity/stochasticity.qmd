@@ -114,7 +114,6 @@ knitr::kable(sir_incidence)
 ## Age stratified SIR model
 
 1) What data should we collect for an age stratified SIR model?
-2) 
 
 ## Renewal models
 Consider an infectious disease model based on the renewal equation.
@@ -150,6 +149,10 @@ If you have a model that takes hours to run for a single parameter combination t
 
 ## Agent based models
 
+Agent based models are wide spread in infectious disease modelling.
+
+Fitting an agent based model is complicated, often too complicated. 
+Each parameter is often fit using a much simpler stochastic model fitting real world data.
 
 ## Real applications 
 
