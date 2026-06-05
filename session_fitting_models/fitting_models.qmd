@@ -123,7 +123,7 @@ If we continue with our previous example we would say that
 $$
 p(D|\mu) = \prod_{i=1}^{20} \mathcal{N}(D_i | \mu, \sigma^2) = (2 \pi \sigma^2)^{-20/2}\exp\left(-\frac{20}{2\sigma^2}(\bar{D} - \mu)^2\right)
 $$
-where $\bar{D}$ is the emirical mean of the data.
+where $\bar{D}$ is the empirical mean of the data.
 We could say that our prior belief is that $\mu$ is around zero, through,
 $$
 p(\mu) = \mathcal{N}(\mu|0,\lambda^2)
