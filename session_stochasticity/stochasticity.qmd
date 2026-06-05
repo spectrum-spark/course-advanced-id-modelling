@@ -188,10 +188,9 @@ Fitting an agent based model is complicated, often too complicated.
 Each parameter is often fit using a much simpler stochastic model fitting real world data.
 
 
-## Real applications 
-
-In my opinion, the hardest part of infectious disease modelling is model fitting. 
-It involves knowledge of data, mathematical modelling, statistics, and computing to make sure that the correct answer is obtained.
+## Real applications of model fitting
+In my opinion, the hardest part of infectious disease modelling is incorporating your data into your model and obtaining a reasonable fit. 
+This process involves knowledge of data, mathematical modelling, statistics, and computing to make sure that the correct answer is obtained.
 This is an interdisciplinary pursuit and its important to make sure that your results are reliable. 
 This introduces the super important topic of reproducibility. 
 
