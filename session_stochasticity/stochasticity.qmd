@@ -173,11 +173,27 @@ If you have a model that takes hours to run for a single parameter combination t
 
 Agent based models are wide spread in infectious disease modelling. 
 Instead of applying heterogeneities to whole groups of people (for example vaccinated), we can apply the heterogeneity at the per individual level. 
-In this way, we can model extremely specific behaviour.
+That is we have an infected individual rather than $N$ individuals in the infected compartment. 
+Making the switch from counting the number of individuals in a homogenous state to individual specific behaviour gives the modeller extreme control over the system.
 
-To exemplify this type of model, COVID?
+:::{.activity}
+Let us consider the transmission of COVID-19 to learn about the concepts in agent based modelling.
+What individual level heterogeneities do you think is important to account for in the transmission of COVID-19?
+:::
 
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 
+:::{.activity}
+What individual level heterogeneities do you think is important to account for in vector borne disease transmission?
+:::
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
+
+### Exercises
 1) Agent based models seem extremely powerful - what are the downsides?
 2) What are the benefits of agent based models?
 3) What situation would call for an agent based model over a deterministic model?
