@@ -7,26 +7,18 @@ presenter: "Dr Eamon Conway"
 contributors: [Dr Eamon Conway]
 ---
 
-## Stochastic models
-
-
-
-## Deterministic models
+## Introduction
 
 The examples provided in [Fitting Models - Part 1](../session_fitting_models/fitting_models.qmd) have focused on probability distributions and determining their parameters.
 But what if the model you have written down is not actually a probability distribution?
 What if you wrote down a system of ordinary differential equations (or partial differential equations)?
-Are there any approaches that can be used to fit these models?
-Unsurprisingly yes, and we can use maximum likelihood or Bayesian inference.
+We will look at the development of different model systems and how to use the tools we learnt in the last workshop to fit parameters.
 
+## Deterministic models
 ### Maximum likelihood for deterministic models
 
 Consider a deterministic model $f: (\mathcal{M},\theta) \rightarrow \mathcal{O}$, which maps an input space $\mathcal{M}$ into an output space $\mathcal{O}$, dependent upon the parameters $\theta$.
 We then make the assumption that the data observed, $D$, is generated from a distribution $Q(\cdot|\mathcal{O},\theta)$ that depends on the output space and the parameters of interest.
-
-::: {.callout-note title="Nonlinear Least Squares"}
-If we choose that $Q(\cdot|\mathcal{O},\theta) = \mathcal{N}(\cdot|\mu=f(\mathcal{M},\theta),\sigma^2)$, with appropriate constraints on the form of $f$, then we are solving a nonlinear least squares problem (demonstrated in next example).
-:::
 
 ::: {.callout-note title="Normal data example" collapse="true"}
 For a simple example, lets assume that the data is independent and that,
@@ -49,6 +41,8 @@ $$
 \hat{\theta} = \max  - \sum_{i=1}^N (D_i - \mu(\theta))^2,
 $$
 which is the same solution to nonlinear least squares!
+Therefore, if we choose that $Q(\cdot|\mathcal{O},\theta) = \mathcal{N}(\cdot|\mu=f(\mathcal{M},\theta),\sigma^2)$, with appropriate constraints on the form of $f$, then we are solving a nonlinear least squares problem (demonstrated in next example).
+
 If you are familiar with using nonlinear least squares to fit your models, then you are now also familiar with using maximum likelihood method to fit your models.
 :::
 
@@ -64,7 +58,6 @@ It is common to work with simulated data when learning how to fit models.
 First we use the model to obtain a random sample of data points. 
 Next we fit the model to the simulated data to see if we obtain the parameters that we put into our model. 
 This process allows us to compare our fitting algorithms to known truths and gives confidence that we will be correct when working with real data.
-
 
 ```{r echo=FALSE, filename="generate_sir_data.r"}
 sir_model <- function(t, state, parameters) {
@@ -109,13 +102,20 @@ sir_incidence <- sir_solution |>
 
 knitr::kable(sir_incidence)
 ```
+
 ### Multi-patch SIR model
+1) What data should we collect for a patch based SIR model?
+2) 
 
 ## Age stratified SIR model
 
 1) What data should we collect for an age stratified SIR model?
 
-## Renewal models
+## Stochastic models
+
+### Markov Models
+
+### Renewal models
 Consider an infectious disease model based on the renewal equation.
 $$
 I_t = R_t\sum_i g_i I_{t-i-1}
@@ -127,38 +127,23 @@ We will assume that the daily incidence is Poisson distributed with a mean given
 
 :::{.callout-note}
 $$
-p(D|\bf{I}_t) = \prod_t \frac{I_t^D_t \exp(-I_t)}{D_t!}
-$$
-$$
-log p(D|\bf{I}_t) = \sum_t D_t \log I_t  + - I_t - \log D_t!
-$$
-$$
-\frac{\partial}{\partial R_j}log p(D|\bf{I}_t) = \sum_t D_t \frac{1}{I_t} \frac{\partial I_t}{\partial R_t}  + - \frac{\partial I_t}{\partial R_t}
-$$
-
-We are taking each data point and assuming conditional independence.
-:::
-
-2) What is the unknown parameters?
-
-3) Could we set a prior? 
-
-4) Assume that $g_i _t - \log D_t!
+p(\mathbf{D}|\mathbf{I}) = \prod_t \frac{{I}_t^{D_t} \exp(-I_t)}{D_t!}
 $$
 We are taking each data point and assuming conditional independence.
 :::
 
-2) What is the unknown parameters?
+2) What are the unknown parameters? 
 
 3) Could we set a prior? 
+
 
 4) Assume that $g_i = $.
+
 What is the maximum likelihood estimate for $R_5$?
 
 ## Pitfalls of model fitting
 
 When fitting mathematical models to data you must be able to evaluate the model relatively efficiently.
-There is no escaping the fact that the model must be run repeatedly to obtain information on the fit.
 Some models can be solved with minimal computational effort and then no real thought has to go into the best option for fitting.
 If you have a model that takes hours to run for a single parameter combination then you now have to think about your best approach.
 
@@ -169,9 +154,11 @@ Agent based models are wide spread in infectious disease modelling.
 Fitting an agent based model is complicated, often too complicated. 
 Each parameter is often fit using a much simpler stochastic model fitting real world data.
 
+
 ## Real applications 
 
 In my opinion, the hardest part of infectious disease modelling is model fitting. 
-It involves knowledge of data, mathematical modelling, statistics, and computing to make that the correct answer is obtained.
+It involves knowledge of data, mathematical modelling, statistics, and computing to make sure that the correct answer is obtained.
 This is an interdisciplinary pursuit and its important to make sure that your results are reliable. 
 This introduces the super important topic of reproducibility. 
+
