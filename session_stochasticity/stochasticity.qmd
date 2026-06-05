@@ -171,7 +171,18 @@ If you have a model that takes hours to run for a single parameter combination t
 
 ## Agent based models
 
-Agent based models are wide spread in infectious disease modelling.
+Agent based models are wide spread in infectious disease modelling. 
+Instead of applying heterogeneities to whole groups of people (for example vaccinated), we can apply the heterogeneity at the per individual level. 
+In this way, we can model extremely specific behaviour.
+
+To exemplify this type of model, COVID?
+
+
+1) Agent based models seem extremely powerful - what are the downsides?
+2) What are the benefits of agent based models?
+3) What situation would call for an agent based model over a deterministic model?
+4) Do agent based models work with any of the fitting methods that we discussed in the last two sessions?
+
 
 Fitting an agent based model is complicated, often too complicated. 
 Each parameter is often fit using a much simpler stochastic model fitting real world data.
