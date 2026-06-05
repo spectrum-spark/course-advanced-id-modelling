@@ -51,6 +51,27 @@ Taking the same deterministic model as before, $f: (\mathcal{M},\theta) \rightar
 
 We then make the assumption that the data observed, $D$, is generated from a distribution $Q(\cdot|\mathcal{O},\theta)$ that depends on the output space and the parameters of interest.
 
+### Infectious disease data
+
+What model could we fit to the data.
+
+How long is someone infectious for? 
+
+How long is someone symptomatic
+
+What data limitations are there? 
+
+The data that you collect should be tied to the model and allow you to
+understand the parameters.
+If we wanted to understand $R_0$, what data should we collect?
+What model would we use?
+
+What other models could be fit? Markov models
+
+Markov processes can also be used to model data. 
+Conditional independence means that we can get a likelihood through
+multiplication
+
 
 ### Fitting an SIR model
 
@@ -106,6 +127,7 @@ knitr::kable(sir_incidence)
 ### Multi-patch SIR model
 1) What data should we collect for a patch based SIR model?
 2) 
+What data would be needed to fit a multi-patch sir model
 
 ## Age stratified SIR model
 
