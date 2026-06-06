@@ -40,11 +40,17 @@ contributors: [Dr Eamon Conway]
 ## Introduction
 
 The examples provided in [Fitting Models - Part 1](../session_fitting_models/fitting_models.qmd) have focused on probability distributions and determining their parameters.
-But what if the model you have written down is not actually a probability distribution?
+But what if the model you have written down is not a standard probability distribution?
 What if you wrote down a system of ordinary differential equations (or partial differential equations)?
 We will look at the development of different model systems and how to use the tools we learnt in the last workshop to fit parameters.
 
 ## Deterministic models
+So far in our workshops we have only looked at models that are deterministic. 
+Deterministic models always return the same value given the same parameters and conditions.
+Examples of deterministic models are Ordinary Differential Equation systems. 
+However the methods that we developed for model fitting have been for probability distributions.
+How can we apply the techniques of maximum likelihood and bayesian inference to these models? 
+
 ### Maximum likelihood for deterministic models
 
 Consider a deterministic model $f: (\mathcal{M},\theta) \rightarrow \mathcal{O}$, which maps an input space $\mathcal{M}$ into an output space $\mathcal{O}$, dependent upon the parameters $\theta$.
@@ -164,8 +170,30 @@ What data would be needed to fit a multi-patch sir model
 1) What data should we collect for an age stratified SIR model?
 
 ## Stochastic models
+Stochastic models on the other 
 
 ### Markov Models
+
+A Markov model satisfies the Markov property.
+You might remember the definition from our section on Markov chains, but the Markov property states that the next state of the system is completely determined by the current state. 
+Therefore, 
+$$
+X_{n+1}|X_n \sim P(\cdot | X_n, \theta)
+$$
+where $X_{n+1}$ is the future state, $P$ is a probability distribution, $\theta$ is any unknown parameters and $X_n$ is the current state of the system. 
+
+There are a large class of models that fall into this category, for example, Markov chains.
+The compartmental models that we have discussed also satisfy this Markov property.
+
+:::{.activity}
+Let us look at a general form of the Markov model. 
+Assume that we have observed $N$ data points $D_i$ at times $t_i$, where $i \in [1,N]$. 
+What would the general form of the likelihood look like? (HINT: assume that $p(x_i|\theta,x_n)$ is the probability distribution function).
+:::
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 
 ### Renewal models
 Consider an infectious disease model based on the renewal equation.
@@ -175,6 +203,14 @@ $$
 
 We will assume that the daily incidence is Poisson distributed with a mean given by $I_t$. 
 
+::: {.activity}
+Is a renewal model an example of a Markov model?
+Please explain your reasoning.
+:::
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 1) What would the likelihood be?
 
 :::{.callout-note}
@@ -202,7 +238,7 @@ If you have a model that takes hours to run for a single parameter combination t
 ## Agent based models
 
 Agent based models are wide spread in infectious disease modelling. 
-Instead of applying heterogeneities to whole groups of people (for example vaccinated), we can apply the heterogeneity at the per individual level. 
+Instead of applying heterogeneities to whole groups of people, for example the infected compartment, we can apply the heterogeneity at the per individual level. 
 That is we have an infected individual rather than $N$ individuals in the infected compartment. 
 Making the switch from counting the number of individuals in a homogenous state to individual specific behaviour gives the modeller extreme control over the system.
 
@@ -223,6 +259,31 @@ What individual level heterogeneities do you think is important to account for i
 <textarea cols="127" rows="5"></textarea>
 ```
 
+To develop an agent based model a choice is usually made about timestepping. 
+Either the model considers a fixed timestep, such as what happens to an individual in a single day, or the model considers the time to next event. 
+They both have their benefits and drawbacks.  
+
+::: {.activity}
+An event in an agent based model is defined as whenever something happens to any agent in the simulation.
+Can this cause problems?
+:::
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
+
+:::{.activity}
+A discrete timestep means that multiple events can happen in your timestep. 
+Can this cause problems?
+:::
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
+
+
+
+
 ### Exercises
 1) Agent based models seem extremely powerful - what are the downsides?
 2) What are the benefits of agent based models?
@@ -230,8 +291,8 @@ What individual level heterogeneities do you think is important to account for i
 4) Do agent based models work with any of the fitting methods that we discussed in the last two sessions?
 
 
-Fitting an agent based model is complicated, often too complicated. 
-Each parameter is often fit using a much simpler stochastic model fitting real world data.
+<!-- Fitting an agent based model is complicated, often too complicated. 
+Each parameter is often fit using a much simpler stochastic model fitting real world data. -->
 
 
 ## Real applications of model fitting
@@ -239,4 +300,3 @@ In my opinion, the hardest part of infectious disease modelling is incorporating
 This process involves knowledge of data, mathematical modelling, statistics, and computing to make sure that the correct answer is obtained.
 This is an interdisciplinary pursuit and its important to make sure that your results are reliable. 
 This introduces the super important topic of reproducibility. 
-
