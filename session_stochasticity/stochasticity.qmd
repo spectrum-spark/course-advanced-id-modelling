@@ -170,7 +170,12 @@ What data would be needed to fit a multi-patch sir model
 1) What data should we collect for an age stratified SIR model?
 
 ## Stochastic models
-Stochastic models on the other 
+Stochastic models have a different outcome everytime they are run. 
+Their output forms a probability distribution. 
+Sometimes we can explicitly state what the probability distribution for the outcome is. 
+Often, we can only simulate (sample) from the probability distribution by running the model forwards in time. 
+In this section we will investigate different stochastic models and learn how to fit them to data. 
+We will not be looking at methods where the likelihood is unknown, however, there is an extensive amount of literature on the topic (see Approximate Bayesian Computation or Likelihood Free methods).
 
 ### Markov Models
 
