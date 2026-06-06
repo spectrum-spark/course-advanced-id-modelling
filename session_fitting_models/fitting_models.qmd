@@ -103,7 +103,7 @@ ggplot2::ggplot(estimator_data, ggplot2::aes(x = `Sample mean`)) +
     ggplot2::geom_function(fun = dnorm,args = list(mean = mu, sd = sqrt(sigma^2/n))) +
     ggplot2::theme_minimal(base_size = 10)
 ```
-We have calculated repeated sample means from our varying data and compared it to our derived distribution. 
+In the above figure, we have calculated repeated sample means from the true probability generating distribution of our data and compared it to our derived distribution. 
 
 Now that we have our measurement, which as a frequentist is a single realisation of all measurements we could have obtained, we can ask, do we have enough information to determine if our estimate is significantly different from a null hypothesis!
 The null hypothesis could be comparing to zero, asking if the mean was statistically different from zero. 
