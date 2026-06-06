@@ -73,16 +73,12 @@ It is,
 $$
 \hat{\mu} = \frac{1}{20}\sum_{i=1}^{20} D_i
 $$
-where $D_i$ is our $i$-th data point and $\hat{\mu}$ is our estimate of the true mean.  
-But as a frequentist, we might then say... well that was our measurement but "Is it a significant measurement!"
+where $D_i$ is our $i$-th data point and $\hat{\mu}$ is our estimate of the true mean.
+But as a frequentist, we believe that if we were to repeat our data collection processes that we would get a different data set. 
+Therefore, the next time we collect data, we expect that we will get a different point estimate of the mean!
+Our mean is actually a random variable because we are stating that the data is a random variable.
 
-To look at significance, we actually look at the distribution of the maximum likelihood estimate. 
-Wait, a distribution of the maximum likelihood? 
-That does not make sense as it is a point.
-Yes it is a point estimate, but what we do is we look at how that point estimate will change BECAUSE OUR DATA IS RANDOM.
-
-The next time we collect data, we expect that we will get a different point estimate of the mean!
-What is the distribution? 
+We can now ask what is the distribution for our mean? 
 Well, 
 $$
 D_i \sim \mathcal{N}(\mu,\sigma^2),
@@ -91,9 +87,9 @@ where $\mathcal{N}$ is used to denote the normal distribution, so we have that
 $$
 \hat{\mu} = \frac{1}{20}\sum_{i=1}^{20} D_i \sim \mathcal{N}(\mu, \frac{\sigma^2}{20}).
 $$
-So because the data varies our estimate for the maximum likelihood is also a random variable!
+
 If you do not believe me, lets look at this example 
-```{r}
+```{r filename="frequentist_comparison.R"}
 
 sigma = 1
 n = 20
@@ -104,14 +100,19 @@ estimator_data <- tibble::tibble(
 )
 ggplot2::ggplot(estimator_data, ggplot2::aes(x = `Sample mean`)) +
     ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), bins = 100) +
+    ggplot2::geom_function(fun = dnorm,args = list(mean = mu, sd = sqrt(sigma^2/n))) +
     ggplot2::theme_minimal(base_size = 10)
 ```
-This calculates the repeated sample means that result from our varying data. 
+We have calculated repeated sample means from our varying data and compared it to our derived distribution. 
 
-The point of p-values is to now ask the question. 
-Given the model assumptions that we have made, what is the probability that I observed my estimated mean?
+Now that we have our measurement, which as a frequentist is a single realisation of all measurements we could have obtained, we can ask, do we have enough information to determine if our estimate is significantly different from a null hypothesis!
+The null hypothesis could be comparing to zero, asking if the mean was statistically different from zero. 
+Or, the null hypothesis could be comparing to another known mean, possibly to test if a group of people are different to the overall known population.
 
-As a bayesian, we would not consider repeating the experiment over and over to determine a distribution of sample means. 
+The point of p-values is answer the null hypothesis
+Given the model assumptions that we have made. In this case, what is the probability that I observed my estimated mean if the true mean was another number?
+
+As a Bayesian, we would not consider repeating the experiment over and over to determine a distribution of sample means. 
 Instead we would use Baye's Theorem to determine the probability distribution for the true mean.
 We would look at 
 $$
