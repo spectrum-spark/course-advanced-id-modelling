@@ -33,10 +33,12 @@ website:
             href: session_intro_id_modelling/session_intro_id_modelling.qmd
           - text: "Session 2: Adding age structure to SIR models"
             href: session_age_structured_models/session_age_structured_models.qmd
-          - text: "Session 3: Fitting models"
-            href: session_fitting_models/fitting_models.qmd
-          - text: "Session 4: Introduction to spatial models"
+          - text: "Session 3: Introduction to spatial models"
             href: session_spatial_models/session_spatial_models.qmd
+          - text: "Session 4: Fitting models - Part 1"
+            href: session_fitting_models/fitting_models.qmd
+          - text: "Session 5: Fitting models - Part 2"
+            href: session_stochasticity/stochasticity.qmd
     
   page-footer:
     left: |
