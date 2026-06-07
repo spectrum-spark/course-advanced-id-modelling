@@ -3,7 +3,7 @@ title: "Introduction to spatial models"
 subtitle: Short training course
 format:
   training-html: default
-presenter: Dr Eamon Conway
+presenter: SPARKLE Training Team
 contributors:
   - Prof. Roslyn Hickson
   - Claude Sonnet 4.6 (Anthropic) — assisted with transcription and translation of existing materials from Python to R, and generation of some figures (all content checked by us)

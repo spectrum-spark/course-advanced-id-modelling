@@ -5,8 +5,7 @@ format:
   training-html: default
 presenter: SPARKLE Training Team
 contributors:
-  - Prof. Roslyn Hickson
-  - Dr Eamon Conway
+  - Dr Michael Lydeamore
 ---
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}

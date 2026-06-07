@@ -3,7 +3,7 @@ title: SPARKLE Training Course
 subtitle: Fitting Models - Bayesian Inference
 format:
   training-html: default
-presenter: "Dr Eamon Conway"
+presenter: SPARKLE Training Team
 contributors: [Dr Eamon Conway]
 ---
 
