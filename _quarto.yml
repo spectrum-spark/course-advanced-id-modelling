@@ -35,13 +35,7 @@ website:
             href: session_age_structured_models/session_age_structured_models.qmd
           - text: "Session 3: Fitting models"
             href: session_fitting_models/fitting_models.qmd
-<<<<<<< HEAD
           - text: "Session 4: Introduction to spatial models"
-=======
-          - text: "Session 3: Fitting models - Part 2"
-            href: session_stochasticity/stochasticity.qmd
-          - text: "Session 3: Introduction to spatial models"
->>>>>>> d8ae378 (Updated session listing)
             href: session_spatial_models/session_spatial_models.qmd
     
   page-footer:
