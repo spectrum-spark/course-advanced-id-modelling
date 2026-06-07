@@ -10,8 +10,9 @@ This course builds on introductory infectious disease modelling concepts and giv
 
 1. [Recap of infectious disease modelling concepts](session_intro_id_modelling/session_intro_id_modelling.qmd)
 2. [Adding age structure to SIR models](session_age_structured_models/session_age_structured_models.qmd)
-3. [Fitting models](session_fitting_models/fitting_models.qmd)
-4. [Introduction to spatial models](session_spatial_models/session_spatial_models.qmd)
+3. [Introduction to spatial models](session_spatial_models/session_spatial_models.qmd)
+4. [Fitting models](session_fitting_models/fitting_models.qmd)
+5. [Fitting models - Part 2](session_stochasticity/stochasticity.qmd)
 
 ## Session 1: Recap of infectious disease modelling concepts
 
@@ -20,3 +21,16 @@ This first session refreshes compartmental modelling, reproduction numbers, and 
 ## Session 2: Adding age structure to SIR models
 
 This session extends a basic SIR model to include age groups, age-specific susceptibility and infectiousness, and age-specific contact matrices. It keeps the theory light and uses guided coding activities so students can practise changing model assumptions and interpreting the resulting epidemic dynamics.
+
+## Session 3: Spatial models 
+
+This session looks at different types of spatial models.
+It is quite a complicated session, introducing important concepts such as travelling waves and transmission on a network. 
+It will be run in a much more interactive way to help everyone achieve their goals.
+
+## Session 4 and 5: Fitting models 
+
+The conclusion of our workshop focuses on introducing some important concepts in model fitting. 
+Without model fitting we would not be able to determine important parameters such as $R_0$. 
+We will introduce both Frequentist and Bayesian inference, with a quick detour into Markov Chain Monte Carlo. 
+The aim is to enable you to understand how more complicated models are fit and be able to identify appropriate data sources for your model. 
