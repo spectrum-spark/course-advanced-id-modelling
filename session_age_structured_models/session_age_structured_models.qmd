@@ -24,6 +24,7 @@ set.seed(20260529)
 ```
 
 ```{css, echo=FALSE}
+<<<<<<< HEAD
 .speaker-note {
     background-color: #fff8e1;
     border-left: 4px solid #f9a825;
@@ -39,6 +40,8 @@ set.seed(20260529)
     font-weight: bold;
 }
 
+=======
+>>>>>>> f2de05d (remove unneccesary css)
 .activity {
     background-color: #eef8fa;
     border-left: 4px solid #4BA5AB;
