@@ -87,6 +87,27 @@ Taking the same deterministic model as before, $f: (\mathcal{M},\theta) \rightar
 
 We then make the assumption that the data observed, $D$, is generated from a distribution $Q(\cdot|\mathcal{O},\theta)$ that depends on the output space and the parameters of interest.
 
+:::{.activity}
+How can we express the likelihood for a deterministic model where the variation in the model output is assumed to be negative binomial?
+:::
+
+```{=html}
+<textarea cols="127" rows="7"></textarea>
+```
+
+:::{.activity}
+What are the unknown parameters in the model?
+What sort of prior could we use?
+Can we use any external information to help with our priors? 
+What is the resulting posterior?
+:::
+
+```{=html}
+<textarea cols="127" rows="7"></textarea>
+```
+
+
+
 ### Infectious disease data
 
 What model could we fit to the data.
