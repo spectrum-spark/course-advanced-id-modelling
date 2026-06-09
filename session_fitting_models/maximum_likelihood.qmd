@@ -115,6 +115,10 @@ For this course, we will use the `optim` function in R (but you can use any tech
   - What is the likelihood of observing your data?
   - Derive the formula for the maximum likelihood
   - What other distributions can be used to model count data and what are their benefits over the Poisson distribution?
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+
 2) The time an individual spends infectious is often modelled as an exponential distribution where
 $$
 p(x|\lambda) = \lambda \exp(-\lambda x)
@@ -127,12 +131,21 @@ where $\lambda$ is the rate parameter.
   - Can you use these estimates within another model? 
   If so, what assumptions are required about the parameters.
   - What other distributions could be considered as a model for the time an individual is infectious?
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+
 3) Repeat the two exercises above and use `optim` to verify your answer. 
 This will involve a few steps. 
   - Simulate $N$ data points from the distribution.
   - Define the likelihood function on your simulated data points.
   - Use optim to determine the maximum.
   - Compare to the analytic solution.
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+
+Let us now move onto [Markov Chain Monte Carlo (MCMC)](mcmc.qmd), before we dive into Bayesian inference.
 
 ::: {.callout-note title="Poisson Regression" collapse="true" .hidden}
 ## Answers 

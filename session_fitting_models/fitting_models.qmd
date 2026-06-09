@@ -90,7 +90,7 @@ $$
 
 If you do not believe me, lets look at this example 
 ```{r filename="frequentist_comparison.R"}
-
+#| code-fold: true
 sigma = 1
 n = 20
 mu = 2
@@ -160,10 +160,7 @@ Now that is the answer from a Bayesian perspective - we have determined our dist
 We do not ask the same $p$-value questions as before as it does not have any meaning to us. 
 The data that we measured updated our belief for what we think the value of $\mu$ is. 
 
-Often people consider frequentist statistics as bayesian statistics without the use of a prior. 
-This is not the case, it is a fundamental shift in how we want to interpret our data. 
-
-```{r}
+```{r echo = FALSE}
 lambda = 2
 
 data <- rnorm(n = n, mean = mu, sd = sigma)
@@ -186,6 +183,9 @@ ggplot2::ggplot(plot_data,ggplot2::aes(x = Mean, fill = Distribution)) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = 0*Mean, ymax = Density), alpha = 0.5) +
     ggplot2::theme_minimal(base_size = 10)
 ```
+
+Often people consider frequentist statistics as bayesian statistics without the use of a prior. 
+This is not the case, it is a fundamental shift in how we want to interpret our data. 
 
 ## Model fitting 
 

@@ -352,21 +352,29 @@ All of these samplers are creating markov chains so they follow the same general
     What is the running average of each chains?
     When does the expected value stabilise?
     - Change the standard deviation of the proposal distribution, how does this affect the running average of each chain?
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
    
 2) Implement markov chain monte carlo to sample from a Student's $t$-distribution where, 
 $$
 \pi(t) = \frac{\gamma(\frac{\nu+1}{2})}{\sqrt{\pi \nu \gamma(\frac{\nu}{2})}}\left(1 + \frac{t^2}{\nu}\right)^{-(\nu +1)/2},
 $$
-where $\nu$ = 3.
+where $\nu$ = 3 (R has an in-built function for this distribution).
     - Show that the expected value of the distribution is zero
     - Show that the variance of the samples approximates the known variance, $\nu/(\nu - 2)$.
-
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
 
 3) Using any markov chain monte carlo sampler you have made, use the `acf` function in R to plot the autocorrelation of samples. 
     - What do you notice about the autocorrelation?
-    - Thin the samples, using the autocorrelation as a guide, and re-run `acf` on the thinned samples.
+    - Thin the samples (remove all but every $n$ samples), using the autocorrelation as a guide, and re-run `acf` on the thinned samples.
     What has happened to the autocorrelation?
     - What is the running expected value from the thinned samples?
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
 
 4) Generate samples from 
 $$
@@ -374,13 +382,18 @@ $$
 $$
 where 
 $$
-\mathcal{N(x|\mu,\sigma^2) = \frac{1}{\sqrt{2 \pi\sigma^2}}\exp(-\frac{(x-\mu)^2}{2\sigma^2}),
+\mathcal{N}(x|\mu,\sigma^2) = \frac{1}{\sqrt{2 \pi\sigma^2}}\exp(-\frac{(x-\mu)^2}{2\sigma^2}),
 $$
 is the probability density function of the normal distribution. 
     - What do you notice about the samples? 
     Has each starting point finished at the final distribution? 
     - Are there any problems? 
     Why do you think they occurred?  
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+
+Time for some [Bayesian inference](bayesianinference.qmd).
 
 :::{.hidden}
 ```{r echo=T, filename="student_t_sampler.r"}

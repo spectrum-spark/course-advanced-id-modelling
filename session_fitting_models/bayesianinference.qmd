@@ -26,8 +26,10 @@ to convert our knowledge of how the data, $D$, was generated given the known par
 ### A simple example
 Lets do linear regression in a Bayesian sense. 
 Assume that we have measured the following data.
-
-```{r echo=FALSE}
+```{r filename = "generate_random_data.R"}
+#| label: Normal distributed data
+#| echo: true
+#| code-fold: true
 data <- (function() {
     N_samples <- 20
     X1 <- rnorm(N_samples, mean = 3, sd = 3)
@@ -168,6 +170,9 @@ There are also approaches, such as using [conjugate priors](https://en.wikipedia
 1) The choice of prior is important in Bayesian inference.
     - What methods do you think can be used to choose a prior?
     - What choices in the prior could be considered "bad"?
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
 2) R has an in-built data set `warpbreaks` (you can call it by just typing `warpbreaks`). 
 We are going to model the mean number of failures in this data as a Poisson distribution with a Gamma distribution prior. 
     - What is the likelihood?
@@ -177,11 +182,13 @@ We are going to model the mean number of failures in this data as a Poisson dist
     - Plot the prior distribution over the posterior distribution.
     - Make the prior informative (reduce the variance of your prior distribution). 
     What happens to the resulting distribution?
-
     - This prior is known as the conjugate prior for the Poisson distribution. 
     What does that mean and does it have any important properties?
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
 
-```{r echo=TRUE, filename="poisson_regression.r"}
+```{r echo=TRUE, filename="poisson_regression.r" .hidden}
 data <- warpbreaks
 initial_samples <- list(
     c(x = 1),
