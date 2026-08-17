@@ -14,6 +14,21 @@ knitr::opts_chunk$set(
     fig.align = "center"
 )
 ```
+```{css, echo=FALSE}
+.speaker-note {
+    display: none;
+}
+.speaker-note {
+    background-color: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 10px 14px;
+    margin: 14px 0;
+    border-radius: 3px;
+    font-size: 0.92em;
+    color: #5d4037;
+}
+```
+
 
 ::: speaker-note
 **Session overview and timing (3 hours total)**
@@ -420,7 +435,7 @@ D     <- 0.5    # diffusion coefficient
 # All cells start with 990 susceptibles and 0 infecteds,
 # except cell 1 which has 10 infecteds to seed the outbreak.
 S0 <- rep(990, n)
-I0 <- rep(0,   n); I0[1] <- 10
+I0 <- rep(0,   n); I0[50] <- 10
 R0 <- rep(0,   n)
 
 state <- c(S0, I0, R0)
@@ -861,7 +876,7 @@ parms <- c(
   beta   = 0.4,   # transmission rate (per day)
   gamma  = 0.1,   # recovery rate (per day, so mean duration = 10 days)
   l_12   = 0.01,  # rate patch-2 residents leave to visit patch 1 (per day)
-  l_21   = 0.01,  # rate patch-1 residents leave to visit patch 2 (per day)
+  l_21   = 0.057,  # rate patch-1 residents leave to visit patch 2 (per day)
   r_12   = 0.5,   # rate patch-2 visitors return home from patch 1 (per day)
   r_21   = 0.5    # rate patch-1 visitors return home from patch 2 (per day)
 )

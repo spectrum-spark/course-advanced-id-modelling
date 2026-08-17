@@ -194,4 +194,5 @@ The first is the maximum likelihood method, which is a frequentist approach.
 The second is the application of Bayesian inference. 
 
 1) [Maximum Likelihood](maximum_likelihood.qmd)
-2) [Bayesian Inference](bayesianinference.qmd)
+2) [Markov Chain Monte Carlo](mcmc.qmd)
+3) [Bayesian Inference](bayesianinference.qmd)

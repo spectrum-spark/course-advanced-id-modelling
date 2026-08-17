@@ -198,3 +198,5 @@ There is also evidence that the log-normal distribution provides a suitable fit 
 A normal distribution would not be suitable because its support is in $(-\infty,\infty)$.
 If you have a lot of data, an empirical approximation could be considered depending upon the amount of data collected and your required questions.  
 :::
+
+

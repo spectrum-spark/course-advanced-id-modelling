@@ -188,8 +188,11 @@ We are going to model the mean number of failures in this data as a Poisson dist
 <textarea cols="127" rows="6"></textarea>
 ```
 
-```{r echo=TRUE, filename="poisson_regression.r" .hidden}
+:::{.hidden}
+
+```{r echo=TRUE, filename="poisson_regression.r"}
 data <- warpbreaks
+data <- data[NULL,]
 initial_samples <- list(
     c(x = 1),
     c(x = 0.5),
@@ -200,7 +203,7 @@ number_samples <- 4000
 proposal_sd <- 2^-3
 
 # Prior parameters
-shape <- 5
+shape <- 0.01
 scale <- 4
 
 log_likelihood <- function(x) {
@@ -242,7 +245,6 @@ mcmc_chains <- purrr::map(
 ) |>
     dplyr::bind_rows(.id = "Chain")
 
-
 mcmc_chains |>
     ggplot2::ggplot(ggplot2::aes(x = Iteration, y = exp(Sample), color = Chain)) +
     ggplot2::geom_point()
@@ -252,5 +254,7 @@ mcmc_chains |>
     ggplot2::ggplot(ggplot2::aes(x = exp(Sample), fill = Chain)) +
     ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), bins = 50, alpha = 0.5, position = "identity") +
     ggplot2::stat_function(fun = dgamma, args = list(shape = shape, scale = scale)) +
-    ggplot2::scale_x_continuous(limits = c(0, 35))
+    ggplot2::scale_x_continuous(limits = c(0, 50))
 ```
+
+:::

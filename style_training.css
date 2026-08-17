@@ -53,7 +53,7 @@ textarea {
    Change display:block to display:none for the student-facing version
    ============================================ */
 .speaker-note {
-    display: none;
+    display:block;
 }
 
 .speaker-note {

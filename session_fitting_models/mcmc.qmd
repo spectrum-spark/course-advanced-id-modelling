@@ -269,7 +269,7 @@ $$
 where $U$ is uniformly distributed between 0 and 1.
 
 ```{r echo=T, filename="stable_mcmc.r"}
-number_samples <- 10000
+number_samples <- 1000
 initial_samples <- c(1.0, 5.0, -10.0, 40.0)
 mu <- 40
 sd <- 2
@@ -303,19 +303,27 @@ mcmc_chains <- purrr::map(
 ) |>
     dplyr::bind_rows(.id = "Chain")
 
-mcmc_chains |>
-    ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Sample)) +
-    ggplot2::geom_point() +
-    ggplot2::facet_wrap(~Chain)
+# mcmc_chains |>
+#     ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Sample)) +
+#     ggplot2::geom_point() +
+#     ggplot2::facet_wrap(~Chain)
 
-mcmc_chains |>
-    dplyr::filter(Iteration > 250) |>
-    dplyr::slice(which(Iteration %% 20 == 0)) |>
-    ggplot2::ggplot(ggplot2::aes(x = Sample)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
-        bins = 50
-    ) +
-    ggplot2::geom_function(fun = dnorm, args = list(mu, sd))
+    mcmc_chains |>
+    dplyr::filter(Iteration > 0) |>
+    dplyr::group_by(Chain) |>
+    dplyr::arrange(Iteration, .by_group = TRUE) |>
+    dplyr::mutate(Mean = slider::slide_dbl(Sample, mean, .before = 499)) |>
+    ggplot2::ggplot(ggplot2::aes(x = Iteration, y = Mean, color = Chain)) +
+    ggplot2::geom_point()
+
+# mcmc_chains |>
+#     dplyr::filter(Iteration > 250) |>
+#     dplyr::slice(which(Iteration %% 20 == 0)) |>
+#     ggplot2::ggplot(ggplot2::aes(x = Sample)) +
+#     ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
+#         bins = 50
+#     ) +
+#     ggplot2::geom_function(fun = dnorm, args = list(mu, sd))
 ```
 
 ### Limitations
@@ -397,7 +405,7 @@ Time for some [Bayesian inference](bayesianinference.qmd).
 
 :::{.hidden}
 ```{r echo=T, filename="student_t_sampler.r"}
-number_samples <- 10000
+number_samples <- 100000
 initial_samples <- c(1.0, 5.0, -10.0, 40.0)
 nu = 3
 
@@ -405,9 +413,9 @@ log_distribution = function(x) dt(x,nu,log=TRUE)
 transition_kernel <- function(current) {
     proposed <- current + rnorm(1, 0, 1)
     log_acceptance_criteria <- log_distribution(proposed) +
-        dnorm(current, proposed, 1, log = TRUE) -
+        dnorm(current, proposed, 100, log = TRUE) -
         log_distribution(current) -
-        dnorm(proposed, current, 1, log = TRUE)
+        dnorm(proposed, current, 100, log = TRUE)
     if (log(runif(1, 0, 1)) > log_acceptance_criteria) {
         proposed <- current
     }
@@ -436,17 +444,20 @@ mcmc_chains |>
     ggplot2::geom_point() +
     ggplot2::facet_wrap(~Chain)
 
-mcmc_chains |> dplyr::filter(Iteration > 1000) |> 
+
+
+mcmc_chains |> dplyr::filter(Iteration > 5000) |> 
     dplyr::slice(which(Iteration %% 200 == 0)) |> dplyr::summarise( .by = tidyselect::all_of("Chain"), Var = var(Sample))
 
-mcmc_chains |>
-    dplyr::filter(Iteration > 250) |>
-    # dplyr::slice(which(Iteration %% 20 == 0)) |>
-    ggplot2::ggplot(ggplot2::aes(x = Sample)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
-        bins = 50
-    ) +
-    ggplot2::geom_function(fun = dt, args = list(nu))
+plot(acf(mcmc_chains |> dplyr::filter(Chain == 1) |> dplyr::select(Sample)))
+# mcmc_chains |>
+#     dplyr::filter(Iteration > 250) |>
+#     # dplyr::slice(which(Iteration %% 20 == 0)) |>
+#     ggplot2::ggplot(ggplot2::aes(x = Sample)) +
+#     ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
+#         bins = 50
+#     ) +
+#     ggplot2::geom_function(fun = dt, args = list(nu))
 ```
 
 ```{r echo=T, filename="separated_modes.r"}
@@ -459,11 +470,11 @@ sd <- 1
 log_distribution = function(x){ log(dnorm(x, mu_1, sd, log = FALSE) + dnorm(x, mu_2, sd, log = FALSE))}
 
 transition_kernel <- function(current) {
-    proposed <- current + rnorm(1, 0, 1)
+    proposed <- current + rnorm(1, 0, 10)
     log_acceptance_criteria <- log_distribution(proposed) +
-        dnorm(current, proposed, 1, log = TRUE) -
+        dnorm(current, proposed, 10, log = TRUE) -
         log_distribution(current) -
-        dnorm(proposed, current, 1, log = TRUE)
+        dnorm(proposed, current, 10, log = TRUE)
     if (log(runif(1, 0, 1)) > log_acceptance_criteria) {
         proposed <- current
     }

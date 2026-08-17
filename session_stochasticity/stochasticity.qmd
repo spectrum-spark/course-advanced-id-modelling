@@ -106,36 +106,11 @@ What is the resulting posterior?
 <textarea cols="127" rows="7"></textarea>
 ```
 
+### Possible exercise (Fitting an SIR model)
 
-
-### Infectious disease data
-
-What model could we fit to the data.
-
-How long is someone infectious for? 
-
-How long is someone symptomatic
-
-What data limitations are there? 
-
-The data that you collect should be tied to the model and allow you to
-understand the parameters.
-If we wanted to understand $R_0$, what data should we collect?
-What model would we use?
-
-What other models could be fit? Markov models
-
-Markov processes can also be used to model data. 
-Conditional independence means that we can get a likelihood through
-multiplication
-
-
-### Fitting an SIR model
-
-It is common to work with simulated data when learning how to fit models. 
-First we use the model to obtain a random sample of data points. 
-Next we fit the model to the simulated data to see if we obtain the parameters that we put into our model. 
-This process allows us to compare our fitting algorithms to known truths and gives confidence that we will be correct when working with real data.
+Taking the code that we have written previously this week, we can fit the $R_0$ for an infectious disease using an SIR model. 
+For simplicity, we have some data stored in the notes (feel free to download).
+Modify the algorithms we used to solve the SIR model within a parameter fitting framework. 
 
 ```{r echo=FALSE, filename="generate_sir_data.r"}
 sir_model <- function(t, state, parameters) {
@@ -156,7 +131,7 @@ sir_model <- function(t, state, parameters) {
 
 sir_parameters <- c(R0 = 2.2, gamma = 1 / 5)
 sir_state <- c(S = 980, I = 20, R = 0)
-sir_times <- seq(0, 20, by = 1)
+sir_times <- seq(0, 40, by = 1)
 
 sir_solution <- as.data.frame(deSolve::ode(
   y = sir_state,
@@ -178,17 +153,98 @@ sir_incidence <- sir_solution |>
     dplyr::mutate(incidence = calculate_incidence(S,I,R,sir_parameters)) |> 
     dplyr::select(time,incidence)
 
-knitr::kable(sir_incidence)
+readr::write_csv(sir_incidence, "sir_data.csv")
 ```
 
-### Multi-patch SIR model
-1) What data should we collect for a patch based SIR model?
-2) 
-What data would be needed to fit a multi-patch sir model
+```{r}
+data <- readr::read_csv("sir_data.csv")
 
-## Age stratified SIR model
+initial_samples <- list(
+    c(R0 = 1),
+    c(R0 = 0.5),
+    c(R0 = -4),
+    c(R0 = -1)
+)
+number_samples <- 4000
+proposal_sd <- 2^-3
 
-1) What data should we collect for an age stratified SIR model?
+# Prior parameters
+shape <- 5
+scale <- 4
+
+
+mean_function <- function(R0){
+
+  sir_parameters <- c(R0 = R0, gamma = 1 / 5)
+  sir_state <- c(S = 980, I = 20, R = 0)
+  sir_times <- seq(0, 40, by = 1)
+
+  sir_solution <- as.data.frame(deSolve::ode(
+    y = sir_state,
+    times = sir_times,
+    func = sir_model,
+    parms = sir_parameters
+  ))
+
+  sir_solution |> 
+      dplyr::mutate(incidence = calculate_incidence(S,I,R,sir_parameters)) |> 
+      dplyr::select(incidence)
+
+}
+
+log_likelihood <- function(x) {
+    lambda <- mean_function(x)
+    return(sum(dpois(x = data$incidence, lambda, log = TRUE)))
+}
+
+log_prior <- function(x) {
+    return(dgamma(x = exp(x), shape = shape, scale = scale))
+}
+
+log_posterior <- function(x) {
+    return(log_likelihood(x) + log_prior(x))
+}
+
+transition_kernel <- function(current) {
+    proposed <- current + rnorm(1, 0, proposal_sd)
+    log_acceptance_criteria <- log_posterior(proposed) +
+        sum(dnorm(current, proposed, proposal_sd, log = TRUE)) -
+        log_posterior(current) -
+        sum(dnorm(proposed, current, proposal_sd, log = TRUE))
+    if (log(runif(1, 0, 1)) > log_acceptance_criteria) {
+        proposed <- current
+    }
+    return(proposed)
+}
+
+generate_mcmc_chain <- function(initial_sample) {
+    return(
+        purrr::accumulate(
+            .x = 1:number_samples,
+            .f = ~ transition_kernel(.x),
+            .init = initial_sample
+        )
+    )
+}
+
+mcmc_chains <- purrr::map(
+    .x = initial_samples,
+    .f = ~ tibble::tibble(Sample = generate_mcmc_chain(.x)) |>
+        dplyr::mutate(Iteration = dplyr::row_number())
+) |>
+    dplyr::bind_rows(.id = "Chain")
+
+mcmc_chains |>
+    ggplot2::ggplot(ggplot2::aes(x = Iteration, y = exp(Sample), color = Chain)) +
+    ggplot2::geom_point()
+
+mcmc_chains |>
+    dplyr::filter(Iteration > 1000) |>
+    ggplot2::ggplot(ggplot2::aes(x = exp(Sample), fill = Chain)) +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), bins = 50, alpha = 0.5, position = "identity") +
+    ggplot2::stat_function(fun = dgamma, args = list(shape = shape, scale = scale)) +
+    ggplot2::scale_x_continuous(limits = c(0, 35))
+```
 
 ## Stochastic models
 Stochastic models have a different outcome everytime they are run. 
@@ -239,21 +295,21 @@ Please explain your reasoning.
 ```
 1) What would the likelihood be?
 
-:::{.callout-note}
-$$
-p(\mathbf{D}|\mathbf{I}) = \prod_t \frac{{I}_t^{D_t} \exp(-I_t)}{D_t!}
-$$
-We are taking each data point and assuming conditional independence.
-:::
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 
 2) What are the unknown parameters? 
 
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
+
 3) Could we set a prior? 
 
-
-4) Assume that $g_i = $.
-
-What is the maximum likelihood estimate for $R_5$?
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 
 ## Pitfalls of model fitting
 
@@ -312,9 +368,25 @@ Can this cause problems?
 
 ### Exercises
 1) Agent based models seem extremely powerful - what are the downsides?
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 2) What are the benefits of agent based models?
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 3) What situation would call for an agent based model over a deterministic model?
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 4) Do agent based models work with any of the fitting methods that we discussed in the last two sessions?
+
+```{=html}
+<textarea cols="127" rows="5"></textarea>
+```
 
 
 <!-- Fitting an agent based model is complicated, often too complicated. 
@@ -326,3 +398,30 @@ In my opinion, the hardest part of infectious disease modelling is incorporating
 This process involves knowledge of data, mathematical modelling, statistics, and computing to make sure that the correct answer is obtained.
 This is an interdisciplinary pursuit and its important to make sure that your results are reliable. 
 This introduces the super important topic of reproducibility. 
+
+We have a resource, [git-is-my-lab-book](https://git-is-my-lab-book.net), which introduces reproducibility and the use of git in infectious disease modelling. 
+If you are interested feel free to reach out to us. 
+We are looking at making a tutorial on reproducibility to help improve computational approaches in infectious disease modelling and would love to know if it is of interest.
+
+## A quick survey! 
+
+I would love to ask you all some questions. 
+You do not have to answer them all if you do not wish. 
+But it helps us with our reporting requirements for funding, which in turn helps to do this again. 
+
+1) How are infectious disease models used in your workplace or research?
+
+2) How do you intend to apply what you have learnt from the short course to your work?
+
+3) Having attended this workshop, how confident are you in creating and using ID models?
+
+4) What were the strengths of the course? 
+
+5) What could be improved?
+
+6) Were you able to understand the language used to decribe the concepts discussed in the short course?
+
+7) (Optional) Do you have any disabilities or accesibility needs?
+
+8) (Optional) What is your age?
+
